@@ -44,10 +44,17 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                         'thumbnail' => [
                             'size' => [250, 188],
                             'mode' => 'inset',
-                            
                         ],
                     ],
-                    
+                ],
+                'my_heighten_filter' => [
+                    'quality' => 100,
+                    'filters' => [
+                        'relative_resize' => [
+                            'heighten' => 120,
+                            //'mode' => 'inset',
+                        ],
+                    ],
                 ],
             ],
         ]

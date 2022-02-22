@@ -54,7 +54,7 @@ class MeriteAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('home'));
+        return new RedirectResponse($this->urlGenerator->generate('merite_home'));
     }
 
     protected function getLoginUrl(Request $request): string

@@ -18,16 +18,16 @@ class Club implements Stringable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
     #[ORM\Column(type: 'string', length: 130)]
-    private $nom;
+    private ?string $nom;
     #[ORM\Column(type: 'string', length: 100, unique: true)]
-    private $email;
+    private ?string $email;
     #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'club', orphanRemoval: true)]
-    private $votes;
+    private array|Collection $votes;
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'club', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private $user;
+    private ?User $user;
     private bool $voteIsComplete = false;
     public function __construct()
     {

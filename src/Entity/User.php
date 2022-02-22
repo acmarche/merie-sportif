@@ -6,20 +6,23 @@ use AcMarche\MeriteSportif\Repository\UserRepository;
 use Stringable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Table]
 #[ORM\UniqueConstraint(columns: ['username'])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: "Un utilisateur a déjà ce nom d'utilisateur")]
-class User implements UserInterface, Stringable
+class User implements UserInterface, Stringable, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private $username;
+    private ?string $username;
+    #[ORM\Column(type: 'string', length: 180, unique: false, nullable: true)]
+    private ?string $email;
     #[ORM\Column(type: 'json')]
     private array $roles = [];
     /**
@@ -28,15 +31,17 @@ class User implements UserInterface, Stringable
     #[ORM\Column(type: 'string')]
     private string $password;
     #[ORM\Column(type: 'string', length: 100)]
-    private $nom;
+    private ?string $nom;
     #[ORM\OneToOne(targetEntity: Token::class, mappedBy: 'user', cascade: ['remove'])]
     private ?Token $token = null;
     #[ORM\OneToOne(targetEntity: Club::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
-    private $club;
+    private ?Club $club;
+
     public function __toString(): string
     {
         return (string) $this->username;
     }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -48,6 +53,16 @@ class User implements UserInterface, Stringable
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }

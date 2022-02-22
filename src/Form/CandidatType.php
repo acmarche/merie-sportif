@@ -30,21 +30,28 @@ class CandidatType extends AbstractType
                 TextType::class,
                 [
                     'required' => false,
-                    'label' => 'Prénom'
+                    'label' => 'Prénom',
                 ]
             )
             ->add(
                 'description',
                 CKEditorType::class,
                 [
-                    'help' => 'Son parcours / Historique du candidat'
+                    'config_name' => 'sepulture_config',
+                    'attr' => [
+                        'rows' => 8,
+                    ],
+                    'help' => 'Son parcours / Historique du candidat',
                 ]
             )
             ->add(
                 'palmares',
                 CKEditorType::class,
                 [
-
+                    'config_name' => 'sepulture_config',
+                    'attr' => [
+                        'rows' => 8,
+                    ],
                 ]
             )
             ->add(
@@ -53,7 +60,7 @@ class CandidatType extends AbstractType
                 [
                     'label' => 'Sport',
                     'required' => true,
-                    'help' => '(Trail - Jogging, Athlétisme, Judo, Basket-ball, Tennis de table, Football,...'
+                    'help' => '(Trail - Jogging, Athlétisme, Judo, Basket-ball, Tennis de table, Football,...',
                 ]
             )
             ->add(
@@ -78,7 +85,7 @@ class CandidatType extends AbstractType
                 CheckboxType::class,
                 [
                     'required' => false,
-                    'label' => 'Validé'
+                    'label' => 'Validé',
                 ]
             );
     }

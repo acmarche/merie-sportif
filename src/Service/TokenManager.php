@@ -21,8 +21,8 @@ class TokenManager
         private TokenRepository $tokenRepository,
         private UserRepository $userRepository
     ) {
-        $this->guardAuthenticatorHandler = $guardAuthenticatorHandler;
-        $this->appAuthenticator = $appAuthenticator;
+    //    $this->guardAuthenticatorHandler = $guardAuthenticatorHandler;
+    //    $this->appAuthenticator = $appAuthenticator;
     }
 
     public function getInstance(User $user): Token

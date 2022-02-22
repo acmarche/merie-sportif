@@ -3,7 +3,7 @@
 {% block title %}Nouveau vote{% endblock %}
 {% block body %}
 
-    {% include 'vote/_titre.html.twig' %}
+    {% include '@AcMarcheMeriteSportif/vote/_titre.html.twig' %}
 
     <div class="card bg-light mb-3">
         <div class="card-header">
@@ -33,7 +33,7 @@
                             <div class="card-header">
                                 <h3>{{ candidat }}</h3>
                             </div>
-                            {% include 'vote/_detail.html.twig' %}
+                            {% include '@AcMarcheMeriteSportif/vote/_detail.html.twig' %}
                             <div class="card-footer">
                                 {{ form_errors(candidatField) }}
                                 {{ form_widget(candidatField) }}

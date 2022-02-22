@@ -15,7 +15,7 @@ class Vote
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'votes')]
     #[ORM\JoinColumn(nullable: false)]

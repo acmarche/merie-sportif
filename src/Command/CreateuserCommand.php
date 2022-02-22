@@ -91,7 +91,7 @@ class CreateuserCommand extends Command
         $user->setEmail($email);
         $user->setUsername($email);
         $user->setNom($name);
-        $user->setPassword($this->userPasswordEncoder->hash($user, $password));
+        $user->setPassword($this->userPasswordEncoder->hashPassword($user, $password));
 
         if ($administrator) {
             $user->addRole($role);

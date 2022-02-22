@@ -9,7 +9,7 @@
         </div>
         <div class="card-body">
 
-            {% include 'club/_actions.html.twig' %}
+            {% include '@AcMarcheMeriteSportif/club/_actions.html.twig' %}
 
             {% if is_granted('ROLE_MERITE_ADMIN') %}
                 <table class="table table-bordered">
@@ -52,9 +52,9 @@
                 </table>
             {% endif %}
             <h3 class="text-danger">Son vote</h3>
-            {% include 'club/_votes.html.twig' %}
+            {% include '@AcMarcheMeriteSportif/club/_votes.html.twig' %}
         </div>
     </div>
 
-    {{ include('club/_delete_form.html.twig') }}
+    {% include '@AcMarcheMeriteSportif/club/_delete_form.html.twig' %}
 {% endblock %}
