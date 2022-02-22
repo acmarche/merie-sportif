@@ -1,0 +1,29 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block title %}Vote{% endblock %}
+
+{% block body %}
+
+    <div class="card bg-light mb-3">
+        <div class="card-header">
+            <h3>Résultats des votes pour {{ club }}</h3>
+        </div>
+        <div class="card-body">
+
+            {% if voteIsComplete == false %}
+                <div class="alert alert-danger">
+                    Votre vote n'est pas encore complet.<br/><br/>
+                    <a href="{{ path('vote_intro') }}" class="alert-link">Complétez le sinon, il ne sera pas valide</a>
+                </div>
+            {% else %}
+                <div class="alert alert-success">
+                    Votre vote est complet. Merci pour votre participation
+                </div>
+            {% endif %}
+
+            {% include 'club/_votes.html.twig' %}
+        </div>
+    </div>
+    <br/>
+
+{% endblock %}

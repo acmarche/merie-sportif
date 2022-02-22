@@ -1,0 +1,22 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block title %}Une erreur est survenue: {{ status_text }}{% endblock %}
+
+{% block body %}
+
+    <div class="card bg-light mb-3">
+        <div class="card-header">
+            <h2>Une erreur est survenue: {{ status_code }} {{ status_text }}</h2>
+        </div>
+        <div class="card-body">
+
+            <p>
+                Something is broken. Please let us know what you were doing when this error occurred.
+                We will fix it as soon as possible. Sorry for any inconvenience caused.
+            </p>
+
+            <img src="{{ asset('csl.jpg') }}" alt="csl">
+        </div>
+    </div>
+
+{% endblock %}

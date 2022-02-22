@@ -1,0 +1,18 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block title %}{{sport}}{% endblock %}
+
+{% block body %}
+    <div class="card bg-light mb-3">
+        <div class="card-header">
+            <h2>{{ sport }}</h2>
+        </div>
+        <div class="card-body">
+
+            {% include 'sport/_actions.html.twig' %}
+
+        </div>
+    </div>
+
+    {{ include('sport/_delete_form.html.twig') }}
+{% endblock %}

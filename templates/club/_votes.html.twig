@@ -1,0 +1,25 @@
+
+<br />
+{% for data in votes %}
+
+    <h5 class="text-success">{{ data.categorie }}</h5>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th style="width: 70%;">Candidat</th>
+            <th>Point(s)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for vote in data.votes %}
+            <tr>
+                <td>{{ vote.candidat }}</td>
+                <td>{{ vote.point }}</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+{% endfor %}

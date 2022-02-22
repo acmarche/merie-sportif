@@ -1,0 +1,36 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-3">
+            <img src="{{ asset('bundles/acmarchemeritesportif/marche.png') }}" style="height: 90px;" alt="logo">
+        </div>
+        <div class="col-6 text-center"><br/>
+            <h3><strong>Challenge & Mérites Sportifs 2022</strong></h3>
+        </div>
+        <div class="col-3">
+            <img src="{{ asset('bundles/acmarchemeritesportif/csl.jpg') }}" style="height: 90px;" alt="logo">
+        </div>
+    </div>
+
+    <p class="text-muted mt-5">
+        La Ville de Marche-en-Famenne remettra le diplôme d’élite sportif et un « passe-sport »<br/>
+        à tous les athlètes qui ont fait un podium au niveau national.<br/><br/>
+        Elle récompensera également des sportifs et des clubs par la remise du prix du mérite sportif et
+        du challenge sportif.
+    </p>
+    {% if is_granted('ROLE_MERITE_CLUB') and vote_activate == true %}
+        <p class="mt-5">
+            <a class="btn btn-primary" href="{{ path('vote_show') }}">Mon vote<span
+                        class="sr-only">(current)</span></a>
+        </p>
+    {% endif %}
+
+    {% if is_granted('ROLE_MERITE_CLUB') and proposition_activate == true %}
+        <p class="mt-5">
+            <a class="btn btn-primary" href="{{ path('proposition_index') }}">Proposer des candidats<span
+                        class="sr-only">(current)</span></a>
+        </p>
+    {% endif %}
+{% endblock %}

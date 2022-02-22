@@ -1,0 +1,59 @@
+<?php
+
+namespace AcMarche\MeriteSportif\Form;
+
+use AcMarche\MeriteSportif\Entity\Candidat;
+use AcMarche\MeriteSportif\Entity\Categorie;
+use AcMarche\MeriteSportif\Repository\CandidatRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class SearchCandidatType extends AbstractType
+{
+    public function __construct(private CandidatRepository $candidatRepository)
+    {
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $sports = $this->candidatRepository->getAllSports();
+
+        $builder
+            ->add(
+                'nom',
+                SearchType::class,
+                [
+                    'required' => false
+                ]
+            )
+            ->add(
+                'categorie',
+                EntityType::class,
+                [
+                    'class' => Categorie::class,
+                    'required' => false
+                ]
+            )
+            ->add(
+                'sport',
+                ChoiceType::class,
+                [
+                    'choices' => $sports,
+                    'required' => false
+                ]
+            );
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults(
+            [
+
+            ]
+        );
+    }
+}

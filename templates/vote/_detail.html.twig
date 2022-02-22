@@ -1,0 +1,49 @@
+<div class="card-body">
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-success">Sport</h3>
+            {{ candidat.sport }}
+            <h3 class="text-success">Palmarès</h3>
+            {{ candidat.palmares|raw }}
+        </div>
+        <div class="col-4">
+            <div class="card-jf" data-src="{{ vich_uploader_asset(candidat, 'imageFile') }}">
+                {% if candidat.imageName %}
+                    <a href="{{ vich_uploader_asset(candidat, 'imageFile') }}">
+                        <img src="{{ vich_uploader_asset(candidat, 'imageFile')| imagine_filter('my_heighten_filter') }}"
+                             alt="{{ candidat.nom }}" class="img-thumbnail"/>
+                    </a>
+                {% endif %}
+            </div>
+            <br/><br/>
+            <button class="btn btn-sm btn-info" role='button' data-toggle="modal"
+                    data-target="#detailModal{{ candidat.id }}" type="button">
+                <i class="fas fa-info-circle"></i>
+                Son parcours
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal candidat -->
+<div class="modal fade" id="detailModal{{ candidat.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Son parcours</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ candidat.description|raw }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

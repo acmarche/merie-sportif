@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Agent</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{{ absolute_url(asset('css/bootstrap.min.css')) }}" rel="stylesheet">
+    <link href="{{ absolute_url(asset('css/pdf.css')) }}" rel="stylesheet">
+</head>
+<body class="container">
+<div class="card text-center">
+    <div class="card-body">
+        Vos votes : {{ club }}
+        <h3 class="card-title"><strong>Challenge & Mérites Sportifs 2019</strong></h3>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Sport</th>
+                <th>Catégorie</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for candidat in candidats %}
+                <tr>
+                    <td>
+                        {{ candidat.nom }}
+                    </td>
+                    <td>{{ candidat.prenom }}</td>
+                    <td>{{ candidat.sport }}</td>
+                    <td>{{ candidat.categorie }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer text-muted">
+
+    </div>
+</div>
+</body>
+</html>

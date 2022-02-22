@@ -1,0 +1,60 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block title %}{{ club }}{% endblock %}
+
+{% block body %}
+    <div class="card bg-light mb-3">
+        <div class="card-header">
+            <h2>{{ club }}</h2>
+        </div>
+        <div class="card-body">
+
+            {% include 'club/_actions.html.twig' %}
+
+            {% if is_granted('ROLE_MERITE_ADMIN') %}
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Vote complet ?</th>
+                        <td>
+                            {% if voteIsComplete %} Oui {% else %} Non {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Lien de vote<br>
+                            <span class="text-muted">
+                                Le lien sert à connecter directement avec le compte du club<br>
+                                sans passer par un nom d'utilisateur/mdp
+                            </span>
+                        </th>
+                        <td>
+                            {% if club.token %}
+                                <a href="{{ path('app_token_show',{'value':club.user.token.value}) }}" target="_blank">
+                                    Voter
+                                </a>
+                            {% else %}
+                                No token
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Compte utilisateur</th>
+                        <td>
+                            {% if club.user %}
+                                <a href="{{ path('merite_user_show',{'id':club.user.id}) }}">
+                                    {{ club.user }}
+                                </a>
+                            {% else %}
+                                No user
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            {% endif %}
+            <h3 class="text-danger">Son vote</h3>
+            {% include 'club/_votes.html.twig' %}
+        </div>
+    </div>
+
+    {{ include('club/_delete_form.html.twig') }}
+{% endblock %}

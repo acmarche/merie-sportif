@@ -1,0 +1,59 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block body %}
+    <div class="card bg-light mb-3">
+        <div class="card-header">
+
+            <div class="row">
+                <div class="col-8">
+                    <h3>Liste des clubs</h3>
+                </div>
+                <div class="col-4">
+                    <a class="float-right btn btn-primary" href="{{ path('club_new') }}">
+                        <i class="fas fa-plus"></i> Ajouter</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+
+            <table class="table table-bordered table-responsive-sm">
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Vote complet ?</th>
+                    <th>Url de vote</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for club in clubs %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('club_show', {'id': club.id}) }}">
+                                {{ club.nom }}</a>
+                        </td>
+                        <td>{{ club.email }}</td>
+                        <td>
+                            {% if club.voteIsComplete %} Oui {% else %} Non {% endif %}
+                        </td>
+                        <td>
+                            {% if club.token %}
+                                <a href="{{ path('app_token_show',{'value':club.user.token.value}) }}">
+                                    Vote
+                                </a>
+                            {% else %}
+                                No token
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

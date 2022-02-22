@@ -1,0 +1,22 @@
+<div class="card-body">
+    <div class="row">
+        <div class="col-8">
+            <p class="card-text">
+                {{ candidat.description|raw }}
+            </p>
+            <h3 class="text-success">Sport</h3>
+            {{ candidat.sport }}
+            <h3 class="text-success">Palmarès</h3>
+            {{ candidat.palmares|raw }}
+            <h3 class="mt-2 text-success">Catégorie</h3>
+            {{ candidat.categorie }}
+            <br/>
+        </div>
+        <div class="col-4">
+            {% if candidat.imageName %}
+                <img src="{{ vich_uploader_asset(candidat, 'imageFile')| imagine_filter('my_heighten_filter') }}"
+                     alt="{{ candidat.nom }}"/>
+            {% endif %}
+        </div>
+    </div>
+</div>

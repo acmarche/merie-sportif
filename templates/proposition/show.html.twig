@@ -1,0 +1,15 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block title %}Candidat{% endblock %}
+
+{% block body %}
+    <div class="card bg-light mb-3">
+        <div class="card-header">
+            <h2>{{ candidat }}</h2>
+        </div>
+        <div class="card-body">
+            {% include 'proposition/_actions.html.twig' %}
+            {% include 'proposition/_detail.html.twig' %}
+        </div>
+    </div>
+{% endblock %}

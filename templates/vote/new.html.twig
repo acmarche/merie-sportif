@@ -1,0 +1,62 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block title %}Nouveau vote{% endblock %}
+{% block body %}
+
+    {% include 'vote/_titre.html.twig' %}
+
+    <div class="card bg-light mb-3">
+        <div class="card-header">
+            <h3>Catégorie: {{ categorie }}</h3>
+        </div>
+
+        <div class="card-body">
+            <p class="text-muted card-text">{{ categorie.description|nl2br }}
+            </p>
+
+            <br/>
+            <div class="alert alert-info">
+                <ul>
+                    <li>Attribué 3 points: 2 pour le premier, 1 pour le deuxième</li>
+                </ul>
+            </div>
+            <br/>
+            {{ form_start(form) }}
+            {{ form_errors(form) }}
+            {{ form_label(form.candidatures) }}
+            {{ form_errors(form.candidatures) }}
+            <div class="row" id="lightgallery">
+                {% for candidatField in form.candidatures %}
+                    <div class="col-md-6">
+                        {% set candidat = candidatField.vars.value.candidat %}
+                        <div class="card bg-light mb-3">
+                            <div class="card-header">
+                                <h3>{{ candidat }}</h3>
+                            </div>
+                            {% include 'vote/_detail.html.twig' %}
+                            <div class="card-footer">
+                                {{ form_errors(candidatField) }}
+                                {{ form_widget(candidatField) }}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="alert alert-danger">Aucun candidats pour cette catégorie !</p>
+                {% endfor %}
+            </div>
+            <button class="btn btn-primary" type="submit"><i class="far fa-save"></i> Enregistrer mon vote</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#lightgallery").lightGallery({
+                    'selector': '.card-jf'
+                });
+        });
+    </script>
+{% endblock %}

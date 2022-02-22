@@ -1,0 +1,42 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block body %}
+
+    <div class="card bg-light mb-3">
+        <div class="card-header">
+            <h3>Résultat des votes</h3>
+        </div>
+        <div class="card-body">
+
+            <a href="{{ path('merite_vote_export') }}" role="button"
+               class="btn btn-primary float-right"><i class="far fa-file-excel"></i> Exporter</a>
+            <br/><br/>
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Candidat</th>
+                    <th>Club</th>
+                    <th>Points</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for vote in votes %}
+                    <tr>
+                        <td>
+                            {{ vote.candidat }}
+                        </td>
+                        <td>
+                            {{ vote.club }}
+                        </td>
+                        <td>
+                            {{ vote.point }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

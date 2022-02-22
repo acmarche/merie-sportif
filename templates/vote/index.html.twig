@@ -1,0 +1,42 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block title %}Résultat des votes{% endblock %}
+
+{% block body %}
+
+    <div class="card bg-light mb-3">
+        <div class="card-header">
+            <h3>Résultats des votes</h3>
+        </div>
+        <div class="card-body">
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Catégorie</th>
+                    <th>Club</th>
+                    <th>Candidat</th>
+                    <th>Position</th>
+                    <th>Date du vote</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for vote in votes %}
+                    <tr>
+                        <td>{{ vote.categorie }}</td>
+                        <td>{{ vote.club }}</td>
+                        <td>{{ vote.candidat }}</td>
+                        <td>{{ vote.position }}</td>
+                        <td>{{ vote.createdAt|date('d-m-Y H:i') }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

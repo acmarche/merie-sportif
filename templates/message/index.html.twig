@@ -1,0 +1,12 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block body %}
+    <h3>Envoie des mails</h3>
+
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-primary" type="submit"><i class="far fa-save"></i> Envoyer</button>
+    {{ form_end(form) }}
+
+{% endblock %}
