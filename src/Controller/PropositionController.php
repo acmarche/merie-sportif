@@ -51,7 +51,7 @@ class PropositionController extends AbstractController
     #[Route(path: '/new/{id}', name: 'proposition_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Categorie $categorie) : Response
     {
-        if ($this->parameterBag->get('acmarche_merite.proposition_activate') == false) {
+        if ($this->parameterBag->get('merite.proposition_activate') == false) {
             $this->addFlash('warning', 'Les propositions sont clôturées');
 
             return $this->redirectToRoute('proposition_index');
@@ -118,7 +118,7 @@ class PropositionController extends AbstractController
     #[Route(path: '/{id}/edit', name: 'proposition_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Candidat $candidat) : Response
     {
-        if ($this->parameterBag->get('acmarche_merite.proposition_activate') == false) {
+        if ($this->parameterBag->get('merite.proposition_activate') == false) {
             $this->addFlash('warning', 'Les propositions sont clôturées');
 
             return $this->redirectToRoute('proposition_index');

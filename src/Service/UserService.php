@@ -25,13 +25,12 @@ class UserService
 
     public function createUser(Club $club): User
     {
-
         $password = random_int(9999, 999999);
         $email = $club->getEmail();
         $user = new User();
         $user->setUsername($email);
         $user->setNom($club->getNom());
-        $user->setPassword($this->userPasswordEncoder->encodePassword($user, $password));
+        $user->setPassword($this->userPasswordEncoder->hashPassword($user, $password));
         $user->addRole('ROLE_MERITE');
         $user->addRole('ROLE_MERITE_CLUB');
 
@@ -48,7 +47,7 @@ class UserService
             if ($user->getUserIdentifier() === 'jkets' || $user->getUserIdentifier() === 'jfsenechal') {
                 $password = 'x';
             }
-            $user->setPassword($this->userPasswordEncoder->encodePassword($user, $password));
+            $user->setPassword($this->userPasswordEncoder->hashPassword($user, $password));
         }
 
         $this->entityManager->flush();

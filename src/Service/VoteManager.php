@@ -10,17 +10,14 @@
 
 namespace AcMarche\MeriteSportif\Service;
 
-
-use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Entity\Categorie;
 use AcMarche\MeriteSportif\Entity\Club;
 use AcMarche\MeriteSportif\Entity\Vote;
-use AcMarche\MeriteSportif\Repository\CandidatRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class VoteManager
 {
-    public function __construct(private EntityManagerInterface $entityManager, private CandidatRepository $candidatRepository)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
     }
 

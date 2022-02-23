@@ -10,7 +10,6 @@
 
 namespace AcMarche\MeriteSportif\Service;
 
-
 use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Entity\Club;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
@@ -18,21 +17,19 @@ use AcMarche\MeriteSportif\Repository\ClubRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-use Symfony\Component\Routing\RouterInterface;
 
 class Mailer
 {
     private FlashBagInterface $flashBag;
+    private string $email = 'maxime.bodson@marche.be';
 
     public function __construct(
         private MailerInterface $mailer,
         private ClubRepository $clubRepository,
         private CandidatRepository $candidatRepository,
-        private RouterInterface $router,
         private PdfFactory $pdfFactory,
         RequestStack $requestStack
     ) {
@@ -44,13 +41,13 @@ class Mailer
         foreach ($this->clubRepository->findAll() as $club) {
             $user = $club->getUser();
             if ($user === null) {
-                $this->flashBag->add('error', $club->getNom() . ' a pas de compte user');
+                $this->flashBag->add('error', $club->getNom().' a pas de compte user');
                 continue;
             }
 
             $token = $user->getToken();
             if ($token === null) {
-                $this->flashBag->add('error', $club->getNom() . ' a pas de token');
+                $this->flashBag->add('error', $club->getNom().' a pas de token');
                 continue;
             }
 
@@ -75,11 +72,11 @@ class Mailer
         return (new TemplatedEmail())
             ->from($data['from'])
             ->to($club->getEmail())
-            ->bcc('johnny.kets@ac.marche.be')
-          //  ->bcc('jf@marche.be')
+            ->bcc($this->email)
+            //  ->bcc('jf@marche.be')
             ->subject($data['sujet'])
             ->text($data['texte'])
-            ->htmlTemplate('message/_content.html.twig')
+            ->htmlTemplate('@AcMarcheMeriteSportif/message/_content.html.twig')
             ->context(
                 [
                     'club' => $club,
@@ -97,13 +94,14 @@ class Mailer
         $email = (new TemplatedEmail())
             ->from($club->getEmail())
             //->to($club->getEmail())
-            ->to('johnny.kets@ac.marche.be')
+            ->addTo($this->email)
+            ->addTo('jd@marche.be')
             ->subject('Une nouvelle proposition pour le mérite')
-            ->htmlTemplate('message/_proposition.html.twig')
+            ->htmlTemplate('@AcMarcheMeriteSportif/message/_proposition.html.twig')
             ->context(
                 [
                     'club' => $club,
-                    'candidat' => $candidat
+                    'candidat' => $candidat,
                 ]
             );
 
@@ -116,17 +114,16 @@ class Mailer
     public function propositionFinish(Club $club): void
     {
         $message = (new TemplatedEmail())
-            ->from('johnny.kets@ac.marche.be')
+            ->from($this->email)
             ->to($club->getEmail())
-            //->to('johnny.kets@ac.marche.be')
             //->addTo('jf@marche.be')
-            ->bcc('johnny.kets@ac.marche.be')
+            ->bcc($this->email)
             ->subject('Vos propositions pour le Challenge & Mérites Sportifs 2019')
-            ->htmlTemplate('message/_proposition_finish.html.twig')
+            ->htmlTemplate('@AcMarcheMeriteSportif/message/_proposition_finish.html.twig')
             ->context(
                 [
                     'club' => $club,
-                    'candidats' => $this->candidatRepository->getByClub($club)
+                    'candidats' => $this->candidatRepository->getByClub($club),
                 ]
             );
 
@@ -148,17 +145,16 @@ class Mailer
     public function votesFinish(Club $club): void
     {
         $message = (new TemplatedEmail())
-            ->from('johnny.kets@ac.marche.be')
+            ->from($this->email)
             ->to($club->getEmail())
-            //->to('johnny.kets@ac.marche.be')
             //->addTo('jf@marche.be')
-            ->bcc('johnny.kets@ac.marche.be')
+            ->bcc($this->email)
             ->subject('Vos votes pour le Challenge & Mérites Sportifs 2019')
-            ->htmlTemplate('message/_vote_finish.html.twig')
+            ->htmlTemplate('@AcMarcheMeriteSportif/message/_vote_finish.html.twig')
             ->context(
                 [
                     'club' => $club,
-                    'candidats' => $this->candidatRepository->getByClub($club)
+                    'candidats' => $this->candidatRepository->getByClub($club),
                 ]
             );
 
