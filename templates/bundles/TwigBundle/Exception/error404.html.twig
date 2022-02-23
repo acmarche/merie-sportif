@@ -1,1 +1,20 @@
-{% include '@AcMarcheMeriteSportif/default/errors/error404.html.twig' %}
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block title %}
+    {{ status_text }}
+{% endblock %}
+
+{% block body -%}
+    <div class="card">
+        <h3 class="card-header">Page non trouvée</h3>
+        <div class="card-body">
+
+            <div class="alert alert-danger">
+
+                {{ exception.message|nl2br|format_file_from_text |trans }}
+
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
