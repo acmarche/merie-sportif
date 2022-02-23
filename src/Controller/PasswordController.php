@@ -28,7 +28,7 @@ class PasswordController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $password = $data->getPassword();
-            $user->setPassword($this->userPasswordEncoder->encodePassword($user, $password));
+            $user->setPassword($this->userPasswordEncoder->hashPassword($user, $password));
             $this->entityManager->flush();
 
             return $this->redirectToRoute(
