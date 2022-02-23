@@ -2,6 +2,7 @@
 
 namespace AcMarche\MeriteSportif\Repository;
 
+use AcMarche\MeriteSportif\Doctrine\OrmCrudTrait;
 use Doctrine\ORM\QueryBuilder;
 use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Entity\Categorie;
@@ -18,6 +19,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CandidatRepository extends ServiceEntityRepository
 {
+    use OrmCrudTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Candidat::class);

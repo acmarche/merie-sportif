@@ -38,7 +38,7 @@
                         </td>
                         <td>
                             {% if club.token %}
-                                <a href="{{ path('app_token_show',{'value':club.user.token.value}) }}">
+                                <a href="{{ path('merite_token_show',{'value':club.user.token.value}) }}">
                                     Vote
                                 </a>
                             {% else %}

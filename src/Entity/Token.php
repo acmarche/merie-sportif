@@ -16,31 +16,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Token implements Stringable
 {
     use TimestampableTrait;
-    /**
-     * @var integer|null $id
-     *
-     *
-     */
+    use UuidTrait;
+
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    protected $id;
-    /**
-     * @var string $value
-     */
+    protected int $id;
+
     #[ORM\Column(type: 'string', length: 50, unique: true)]
     #[Assert\NotBlank]
-    protected $value;
-    /**
-     * @var DateTime $expire_at
-     */
+    protected string $value;
+
     #[ORM\Column(type: 'date', nullable: false)]
-    protected $expire_at;
-    /**
-     * @var User $user
-     */
+    protected DateTimeInterface $expire_at;
+
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'token')]
-    protected $user;
+    protected User $user;
+
     public function __construct()
     {
         $this->value = bin2hex(random_bytes(20));
@@ -65,9 +57,7 @@ class Token implements Stringable
 
         return $this;
     }
-    /**
-     * @return DateTime|DateTimeImmutable
-     */
+
     public function getExpireAt(): \DateTimeInterface
     {
         return $this->expire_at;

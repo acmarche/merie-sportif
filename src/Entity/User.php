@@ -18,16 +18,14 @@ class User implements UserInterface, Stringable, PasswordAuthenticatedUserInterf
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private ?string $username;
     #[ORM\Column(type: 'string', length: 180, unique: false, nullable: true)]
     private ?string $email;
     #[ORM\Column(type: 'json')]
     private array $roles = [];
-    /**
-     * @var string The hashed password
-     */
+
     #[ORM\Column(type: 'string')]
     private string $password;
     #[ORM\Column(type: 'string', length: 100)]

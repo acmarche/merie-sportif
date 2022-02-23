@@ -1,28 +1,25 @@
 <?php
 
-namespace AcMarche\MeriteSportif\Service;
+namespace AcMarche\MeriteSportif\Token;
 
-use Exception;
-use DateTime;
 use AcMarche\MeriteSportif\Entity\Token;
 use AcMarche\MeriteSportif\Entity\User;
 use AcMarche\MeriteSportif\Repository\TokenRepository;
 use AcMarche\MeriteSportif\Repository\UserRepository;
+use DateTime;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
 
 class TokenManager
 {
-    public $guardAuthenticatorHandler;
-    public $appAuthenticator;
-
-
     public function __construct(
-
+        private UserAuthenticatorInterface $userAuthenticator,
+        private FormLoginAuthenticator $formLoginAuthenticator,
         private TokenRepository $tokenRepository,
         private UserRepository $userRepository
     ) {
-    //    $this->guardAuthenticatorHandler = $guardAuthenticatorHandler;
-    //    $this->appAuthenticator = $appAuthenticator;
     }
 
     public function getInstance(User $user): Token
@@ -36,18 +33,19 @@ class TokenManager
         return $token;
     }
 
-    public function generate(User $user)
+    public function generate(User $user): Token
     {
         $token = $this->getInstance($user);
         try {
             $token->setValue(bin2hex(random_bytes(20)));
+            $token->setUuid($token->generateUuid());
         } catch (Exception) {
         }
 
         $expireTime = new DateTime('+90 day');
         $token->setExpireAt($expireTime);
 
-        $this->tokenRepository->save();
+        $this->tokenRepository->flush();
 
         return $token;
     }
@@ -69,11 +67,10 @@ class TokenManager
 
     public function loginUser(Request $request, User $user, $firewallName): void
     {
-        $this->guardAuthenticatorHandler->authenticateUserAndHandleSuccess(
+        $this->userAuthenticator->authenticateUser(
             $user,
+            $this->formLoginAuthenticator,
             $request,
-            $this->appAuthenticator,
-            $firewallName
         );
     }
 }

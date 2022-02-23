@@ -2,6 +2,7 @@
 
 namespace AcMarche\MeriteSportif\Repository;
 
+use AcMarche\MeriteSportif\Doctrine\OrmCrudTrait;
 use AcMarche\MeriteSportif\Entity\Categorie;
 use AcMarche\MeriteSportif\Entity\Club;
 use AcMarche\MeriteSportif\Entity\Vote;
@@ -16,6 +17,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class VoteRepository extends ServiceEntityRepository
 {
+    use OrmCrudTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Vote::class);

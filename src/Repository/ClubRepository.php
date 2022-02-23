@@ -2,6 +2,7 @@
 
 namespace AcMarche\MeriteSportif\Repository;
 
+use AcMarche\MeriteSportif\Doctrine\OrmCrudTrait;
 use AcMarche\MeriteSportif\Entity\Club;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -14,6 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ClubRepository extends ServiceEntityRepository
 {
+
+    use OrmCrudTrait;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Club::class);
