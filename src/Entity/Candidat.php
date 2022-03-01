@@ -27,21 +27,21 @@ class Candidat implements Stringable
     #[ORM\Column(type: 'integer')]
     private int $id;
     #[ORM\Column(type: 'string', length: 100)]
-    private ?string $nom;
+    private ?string $nom= null;
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private ?string $prenom;
+    private ?string $prenom= null;
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $description;
+    private ?string $description= null;
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $palmares;
+    private ?string $palmares= null;
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private ?string $add_by;
     #[ORM\Column(type: 'boolean')]
-    private ?bool $validate;
+    private ?bool $validate=false;
     #[ORM\Column(type: 'string', length: 150, nullable: true)]
     private ?string $sport;
     #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'candidats')]
-    private ?Categorie $categorie;
+    private ?Categorie $categorie= null;
     #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'candidat', orphanRemoval: true)]
     private Collection|array $votes;
     /**
@@ -49,7 +49,7 @@ class Candidat implements Stringable
      *
      * @Vich\UploadableField(mapping="candidat_image", fileNameProperty="imageName", size="imageSize")
      */
-    private File $imageFile;
+    private ?File $imageFile= null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $imageName = null;
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -93,7 +93,7 @@ class Candidat implements Stringable
      * @param File|UploadedFile $imageFile
      * @throws Exception
      */
-    public function setImageFile(File|UploadedFile $imageFile = null): void
+    public function setImageFile(File|UploadedFile|null $imageFile = null): void
     {
         $this->imageFile = $imageFile;
 
@@ -104,7 +104,7 @@ class Candidat implements Stringable
         }
     }
 
-    public function getImageFile(): File
+    public function getImageFile(): ?File
     {
         return $this->imageFile;
     }
