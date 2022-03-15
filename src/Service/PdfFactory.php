@@ -18,7 +18,7 @@ class PdfFactory
     public function create(Club $club): string
     {
         $html = $this->environment->render(
-            'pdf/proposition_finish.html.twig',
+            '@AcMarcheMeriteSportif/pdf/proposition_finish.html.twig',
             [
                 'club' => $club,
                 'candidats' => $this->candidatRepository->getByClub($club)
