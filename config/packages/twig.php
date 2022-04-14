@@ -17,6 +17,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 '%kernel.project_dir%/src/AcMarche/MeriteSportif/templates' => 'AcMarcheMeriteSportif',
             ],
             'globals' => [
+                'bootcdn' => 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css',
                 'vote_activate' => '%merite.vote_activate%',
                 'proposition_activate' => '%merite.proposition_activate%',
             ],

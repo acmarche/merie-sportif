@@ -16,8 +16,8 @@
                 {% endif %}
             </div>
             <br/><br/>
-            <button class="btn btn-sm btn-info" role='button' data-toggle="modal"
-                    data-target="#detailModal{{ candidat.id }}" type="button">
+            <button class="btn btn-sm btn-info" role='button' data-bs-toggle="modal"
+                    data-bs-target="#detailModal{{ candidat.id }}" type="button">
                 <i class="fas fa-info-circle"></i>
                 Son parcours
             </button>
@@ -31,17 +31,14 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Son parcours</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h4 class="modal-title" id="myModalLabel">Son parcours</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 {{ candidat.description|raw }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"
-                        data-dismiss="modal">Fermer
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer
                 </button>
             </div>
         </div>

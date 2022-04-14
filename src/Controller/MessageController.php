@@ -19,10 +19,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * Class MessageController
- * @package AcMarche\MeriteSportif\Controller
- */
 #[Route(path: '/message')]
 #[IsGranted('ROLE_MERITE_ADMIN')]
 class MessageController extends AbstractController
@@ -30,11 +26,9 @@ class MessageController extends AbstractController
     public function __construct(private Mailer $mailer)
     {
     }
-    /**
-     * @return RedirectResponse|Response
-     */
+
     #[Route(path: '/', name: 'merite_message_index', methods: ['GET', 'POST'])]
-    public function index(Request $request) : RedirectResponse|Response
+    public function index(Request $request): RedirectResponse|Response
     {
         $form = $this->createForm(MessageType::class, ['from' => 'csl@marche.be']);
         $form->handleRequest($request);
@@ -46,10 +40,11 @@ class MessageController extends AbstractController
 
             return $this->redirectToRoute('merite_message_index');
         }
+
         return $this->render('@AcMarcheMeriteSportif/message/index.html.twig',
-             [
-                 'form' => $form->createView(),
-             ]
-         );
+            [
+                'form' => $form->createView(),
+            ]
+        );
     }
 }

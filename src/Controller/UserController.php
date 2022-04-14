@@ -19,21 +19,27 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_MERITE_ADMIN')]
 class UserController extends AbstractController
 {
-    public function __construct(private UserRepository $utilisateurRepository, private UserPasswordHasherInterface $userPasswordEncoder, private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private UserRepository $utilisateurRepository,
+        private UserPasswordHasherInterface $userPasswordEncoder,
+        private EntityManagerInterface $entityManager
+    ) {
     }
+
     #[Route(path: '/', name: 'merite_user_index', methods: ['GET', 'POST'])]
-    public function index(Request $request) : Response
+    public function index(Request $request): Response
     {
         $users = $this->utilisateurRepository->findAll();
+
         return $this->render('@AcMarcheMeriteSportif/user/index.html.twig',
             [
                 'users' => $users,
             ]
         );
     }
+
     #[Route(path: '/new', name: 'merite_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request) : Response
+    public function new(Request $request): Response
     {
         $utilisateur = new User();
         $form = $this->createForm(UserType::class, $utilisateur);
@@ -41,13 +47,14 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $utilisateur->setPassword(
-                $this->userPasswordEncoder->encodePassword($utilisateur, $utilisateur->getPassword())
+                $this->userPasswordEncoder->hashPassword($utilisateur, $utilisateur->getPassword())
             );
             $this->entityManager->persist($utilisateur);
             $this->entityManager->flush();
 
             return $this->redirectToRoute('merite_user_show', ['id' => $utilisateur->getId()]);
         }
+
         return $this->render('@AcMarcheMeriteSportif/user/new.html.twig',
             [
                 'user' => $utilisateur,
@@ -55,8 +62,9 @@ class UserController extends AbstractController
             ]
         );
     }
+
     #[Route(path: '/{id}', name: 'merite_user_show', methods: ['GET'])]
-    public function show(User $utilisateur) : Response
+    public function show(User $utilisateur): Response
     {
         return $this->render('@AcMarcheMeriteSportif/user/show.html.twig',
             [
@@ -64,8 +72,9 @@ class UserController extends AbstractController
             ]
         );
     }
+
     #[Route(path: '/{id}/edit', name: 'merite_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $utilisateur) : Response
+    public function edit(Request $request, User $utilisateur): Response
     {
         $form = $this->createForm(UserEditType::class, $utilisateur);
         $form->handleRequest($request);
@@ -77,6 +86,7 @@ class UserController extends AbstractController
                 ['id' => $utilisateur->getId()]
             );
         }
+
         return $this->render('@AcMarcheMeriteSportif/user/edit.html.twig',
             [
                 'user' => $utilisateur,
@@ -84,13 +94,15 @@ class UserController extends AbstractController
             ]
         );
     }
+
     #[Route(path: '/{id}', name: 'merite_user_delete', methods: ['DELETE'])]
-    public function delete(Request $request, User $utilisateur) : RedirectResponse
+    public function delete(Request $request, User $utilisateur): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete'.$utilisateur->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($utilisateur);
             $this->entityManager->flush();
         }
+
         return $this->redirectToRoute('merite_user_index');
     }
 }

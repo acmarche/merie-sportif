@@ -24,26 +24,36 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_MERITE_CLUB')]
 class VoteController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $entityManager, private CategorieRepository $categorieRepository, private CandidatRepository $candidatRepository, private ClubRepository $clubRepository, private VoteRepository $voteRepository, private VoteService $voteService, private VoteManager $voteManager, private ParameterBagInterface $parameterBag)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private CategorieRepository $categorieRepository,
+        private CandidatRepository $candidatRepository,
+        private VoteRepository $voteRepository,
+        private VoteService $voteService,
+        private VoteManager $voteManager,
+        private ParameterBagInterface $parameterBag
+    ) {
     }
+
     #[Route(path: '/', name: 'vote_index', methods: ['GET'])]
-    public function index() : Response
+    public function index(): Response
     {
-        if ($this->parameterBag->get('acmarche_merite.vote_activate') === false) {
+        if ($this->parameterBag->get('merite.vote_activate') === false) {
             $this->addFlash('warning', 'Les votes ne sont pas encore ouvert');
 
             return $this->redirectToRoute('merite_home');
         }
         $votes = $this->voteRepository->getAll();
+
         return $this->render('@AcMarcheMeriteSportif/vote/index.html.twig',
             [
                 'votes' => $votes,
             ]
         );
     }
+
     #[Route(path: '/intro', name: 'vote_intro', methods: ['GET', 'POST'])]
-    public function intro() : Response
+    public function intro(): Response
     {
         $user = $this->getUser();
         $club = $user->getClub();
@@ -52,6 +62,7 @@ class VoteController extends AbstractController
             $done = $this->voteService->voteExist($club, $categorie);
             $categorie->setComplete($done);
         }
+
         return $this->render('@AcMarcheMeriteSportif/vote/intro.html.twig',
             [
                 'club' => $club,
@@ -59,10 +70,11 @@ class VoteController extends AbstractController
             ]
         );
     }
+
     #[Route(path: '/new/{ordre}', name: 'vote_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Categorie $categorie) : Response
+    public function new(Request $request, Categorie $categorie): Response
     {
-        if ($this->parameterBag->get('acmarche_merite.vote_activate') === false) {
+        if ($this->parameterBag->get('merite.vote_activate') === false) {
             $this->addFlash('warning', 'Les votes ne sont pas encore ouvert');
 
             return $this->redirectToRoute('merite_home');
@@ -99,6 +111,7 @@ class VoteController extends AbstractController
 
             return $this->redirectToRoute('vote_intro');
         }
+
         return $this->render('@AcMarcheMeriteSportif/vote/new.html.twig',
             [
                 'categorie' => $categorie,
@@ -107,13 +120,15 @@ class VoteController extends AbstractController
             ]
         );
     }
+
     #[Route(path: '/show', name: 'vote_show', methods: ['GET'])]
-    public function show() : Response
+    public function show(): Response
     {
         $user = $this->getUser();
         $club = $user->getClub();
         $votes = $this->voteService->getVotesByClub($club);
         $isComplete = $this->voteService->isComplete($club);
+
         return $this->render('@AcMarcheMeriteSportif/vote/show.html.twig',
             [
                 'club' => $club,
@@ -122,8 +137,9 @@ class VoteController extends AbstractController
             ]
         );
     }
+
     #[Route(path: '/trier', name: 'vote_trier', methods: ['GET', 'POST'])]
-    public function trier(Request $request) : Response
+    public function trier(Request $request): Response
     {
         $positions = [];
         if ($request->isXmlHttpRequest()) {
@@ -139,11 +155,13 @@ class VoteController extends AbstractController
                 return new Response(implode('|', $positions));
             }
         }
+
         return new Response(null);
     }
+
     #[Route(path: '/{id}', name: 'vote_delete', methods: ['DELETE'])]
     #[IsGranted('ROLE_MERITE_ADMIN')]
-    public function delete(Request $request, Club $club) : RedirectResponse
+    public function delete(Request $request, Club $club): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete'.$club->getId(), $request->request->get('_token'))) {
             foreach ($club->getVotes() as $vote) {
@@ -151,6 +169,7 @@ class VoteController extends AbstractController
             }
             $this->entityManager->flush();
         }
+
         return $this->redirectToRoute('vote_index');
     }
 }

@@ -35,7 +35,7 @@ class SecurityController extends AbstractController
         } else {
             $error = null;
         }
-        if (! $error instanceof AuthenticationException) {
+        if (!$error instanceof AuthenticationException) {
             $error = null; // The value does not come from the security component.
         }
         // last username entered by the user
@@ -56,7 +56,9 @@ class SecurityController extends AbstractController
     #[Route(path: '/login_check', name: 'app_login_check')]
     public function check(): void
     {
-        throw new RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
+        throw new RuntimeException(
+            'You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.'
+        );
     }
 
     #[Route(path: '/logout', name: 'app_logout')]

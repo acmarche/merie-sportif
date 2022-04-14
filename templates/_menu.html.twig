@@ -1,10 +1,15 @@
 {% set action = app.request.attributes.get("_route") %}
 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
     {% if is_granted('ROLE_MERITE_CLUB') %}
-        <li class="nav-item"><a href="{{ path('proposition_index') }}" class="nav-link">Proposer des candidats</a></li>
-        {% if vote_activate == true %}
+        {% if proposition_activate == 'true' %}
             <li class="nav-item">
-                <a class="nav-link" href="{{ path('vote_show') }}">Mon vote</a>
+                <a href="{{ path('proposition_index') }}" class="nav-link">
+                    <i class="fas fa-pen"></i> Proposer des candidats</a>
+            </li>
+        {% endif %}
+        {% if vote_activate == 'true' %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('vote_show') }}"> <i class="fas fa-pen"></i> Mon vote</a>
             </li>
         {% endif %}
     {% endif %}

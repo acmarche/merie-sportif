@@ -20,14 +20,14 @@
         Elle récompensera également des sportifs et des clubs par la remise du prix du mérite sportif et
         du challenge sportif.
     </p>
-    {% if is_granted('ROLE_MERITE_CLUB') and vote_activate == true %}
+    {% if is_granted('ROLE_MERITE_CLUB') and vote_activate == 'true' %}
         <p class="mt-5">
             <a class="btn btn-primary" href="{{ path('vote_show') }}">Mon vote<span
                         class="sr-only">(current)</span></a>
         </p>
     {% endif %}
 
-    {% if is_granted('ROLE_MERITE_CLUB') and proposition_activate == true %}
+    {% if is_granted('ROLE_MERITE_CLUB') and proposition_activate == 'true' %}
         <p class="mt-5">
             <a class="btn btn-primary" href="{{ path('proposition_index') }}">Proposer des candidats<span
                         class="sr-only">(current)</span></a>
