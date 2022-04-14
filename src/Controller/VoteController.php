@@ -160,7 +160,7 @@ class VoteController extends AbstractController
         return new Response(null);
     }
 
-    #[Route(path: '/{id}', name: 'vote_delete', methods: ['DELETE'])]
+    #[Route(path: '/{id}', name: 'vote_delete', methods: ['POST'])]
     #[IsGranted('ROLE_MERITE_ADMIN')]
     public function delete(Request $request, Club $club): RedirectResponse
     {

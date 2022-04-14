@@ -95,7 +95,7 @@ class UserController extends AbstractController
         );
     }
 
-    #[Route(path: '/{id}', name: 'merite_user_delete', methods: ['DELETE'])]
+    #[Route(path: '/{id}', name: 'merite_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $utilisateur): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete'.$utilisateur->getId(), $request->request->get('_token'))) {

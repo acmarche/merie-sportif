@@ -21,27 +21,29 @@ class CandidatController extends AbstractController
     public function __construct(private ManagerRegistry $managerRegistry)
     {
     }
+
     #[Route(path: '/', name: 'candidat_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, CandidatRepository $candidatRepository) : Response
+    public function index(Request $request, CandidatRepository $candidatRepository): Response
     {
         $form = $this->createForm(SearchCandidatType::class, []);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $candidats = $candidatRepository->search($data['nom'], $data['sport'], $data['categorie']);
-        }
-        else {
+        } else {
             $candidats = $candidatRepository->getAll();
         }
+
         return $this->render('@AcMarcheMeriteSportif/candidat/index.html.twig',
             [
                 'candidats' => $candidats,
-                'form' => $form->createView()
+                'form' => $form->createView(),
             ]
         );
     }
+
     #[Route(path: '/new', name: 'candidat_new', methods: ['GET', 'POST'])]
-    public function new(Request $request) : Response
+    public function new(Request $request): Response
     {
         $candidat = new Candidat();
         $form = $this->createForm(CandidatType::class, $candidat);
@@ -55,6 +57,7 @@ class CandidatController extends AbstractController
 
             return $this->redirectToRoute('candidat_index');
         }
+
         return $this->render('@AcMarcheMeriteSportif/candidat/new.html.twig',
             [
                 'candidat' => $candidat,
@@ -62,8 +65,9 @@ class CandidatController extends AbstractController
             ]
         );
     }
+
     #[Route(path: '/{id}', name: 'candidat_show', methods: ['GET'])]
-    public function show(Candidat $candidat) : Response
+    public function show(Candidat $candidat): Response
     {
         return $this->render('@AcMarcheMeriteSportif/candidat/show.html.twig',
             [
@@ -71,18 +75,21 @@ class CandidatController extends AbstractController
             ]
         );
     }
+
     #[Route(path: '/{id}/edit', name: 'candidat_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Candidat $candidat) : Response
+    public function edit(Request $request, Candidat $candidat): Response
     {
         $form = $this->createForm(CandidatType::class, $candidat);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
             $this->managerRegistry->getManager()->flush();
 
             $this->addFlash('success', 'Candidat modifié');
 
-            return $this->redirectToRoute('candidat_index');
+            return $this->redirectToRoute('candidat_show', ['id' => $candidat->getId()]);
         }
+
         return $this->render('@AcMarcheMeriteSportif/candidat/edit.html.twig',
             [
                 'candidat' => $candidat,
@@ -90,15 +97,17 @@ class CandidatController extends AbstractController
             ]
         );
     }
-    #[Route(path: '/{id}', name: 'candidat_delete', methods: ['DELETE'])]
-    public function delete(Request $request, Candidat $candidat) : RedirectResponse
+
+    #[Route(path: '/{id}', name: 'candidat_delete', methods: ['POST'])]
+    public function delete(Request $request, Candidat $candidat): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete' . $candidat->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$candidat->getId(), $request->request->get('_token'))) {
             $entityManager = $this->managerRegistry->getManager();
             $entityManager->remove($candidat);
             $entityManager->flush();
             $this->addFlash('success', 'Candidat supprimé');
         }
+
         return $this->redirectToRoute('candidat_index');
     }
 }

@@ -8,17 +8,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 use Stringable;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @Vich\Uploadable
- */
 #[ORM\Entity(repositoryClass: CandidatRepository::class)]
-class Candidat implements Stringable
+#[Vich\Uploadable]
+class Candidat implements Stringable, TimestampableInterface
 {
     use TimestampableTrait;
 
@@ -27,29 +25,26 @@ class Candidat implements Stringable
     #[ORM\Column(type: 'integer')]
     private int $id;
     #[ORM\Column(type: 'string', length: 100)]
-    private ?string $nom= null;
+    private ?string $nom = null;
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private ?string $prenom= null;
+    private ?string $prenom = null;
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $description= null;
+    private ?string $description = null;
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $palmares= null;
+    private ?string $palmares = null;
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private ?string $add_by;
     #[ORM\Column(type: 'boolean')]
-    private ?bool $validate=false;
+    private ?bool $validate = false;
     #[ORM\Column(type: 'string', length: 150, nullable: true)]
     private ?string $sport;
     #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'candidats')]
-    private ?Categorie $categorie= null;
+    private ?Categorie $categorie = null;
     #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'candidat', orphanRemoval: true)]
     private Collection|array $votes;
-    /**
-     * NOTE: This is not a mapped field of entity metadata, just a simple property.
-     *
-     * @Vich\UploadableField(mapping="candidat_image", fileNameProperty="imageName", size="imageSize")
-     */
-    private ?File $imageFile= null;
+
+    #[Vich\UploadableField(mapping: 'candidat_image', fileNameProperty: 'imageName', size: 'imageSize')]
+    private ?File $imageFile = null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $imageName = null;
     #[ORM\Column(type: 'integer', nullable: true)]
@@ -84,16 +79,9 @@ class Candidat implements Stringable
     }
 
     /**
-     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
-     * of 'UploadedFile' is injected into this setter to trigger the update. If this
-     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
-     * must be able to accept an instance of 'File' as the bundle will inject one here
-     * during Doctrine hydration.
-     *
-     * @param File|UploadedFile $imageFile
      * @throws Exception
      */
-    public function setImageFile(File|UploadedFile|null $imageFile = null): void
+    public function setImageFile(?File $imageFile = null): void
     {
         $this->imageFile = $imageFile;
 

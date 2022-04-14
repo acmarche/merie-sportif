@@ -6,6 +6,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension(
         'vich_uploader',
         [
+            'metadata' => ['type' => 'attribute'],
             'mappings' => [
                 'candidat_image' => [
                     'uri_prefix' => '/images/candidats',

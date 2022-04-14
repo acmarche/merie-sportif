@@ -82,7 +82,7 @@ class SportController extends AbstractController
         );
     }
 
-    #[Route(path: '/{id}', name: 'sport_delete', methods: ['DELETE'])]
+    #[Route(path: '/{id}', name: 'sport_delete', methods: ['POST'])]
     public function delete(Request $request, Sport $sport): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete'.$sport->getId(), $request->request->get('_token'))) {
