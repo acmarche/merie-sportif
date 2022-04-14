@@ -32,13 +32,9 @@ class VoteService
     public function getVotesByClub(Club $club): array
     {
         $rows = $this->voteRepository->getByClub($club);
-        $categoriePrecedente = null;
         foreach ($rows as $data) {
-
             $categorie = $data->getCategorie();
-
             $vote = ['candidat' => $data->getCandidat(), 'point' => $data->getPoint()];
-
             $this->addVote($categorie, $vote);
         }
 
