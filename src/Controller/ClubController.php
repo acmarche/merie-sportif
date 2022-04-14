@@ -121,6 +121,8 @@ class ClubController extends AbstractController
             $this->entityManager->flush();
         }
 
+        $this->addFlash('success', 'Club supprimé');
+
         return $this->redirectToRoute('club_index');
     }
 }
