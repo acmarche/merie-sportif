@@ -17,7 +17,7 @@
             <br/>
             <div class="alert alert-info">
                 <ul>
-                    <li>Attribué 3 points: 2 pour le premier, 1 pour le deuxième</li>
+                    <li>Attribué <strong>3 points:</strong> 2 pour le premier, 1 pour le deuxième</li>
                 </ul>
             </div>
             <br/>
@@ -25,6 +25,8 @@
             {{ form_errors(form) }}
             {{ form_label(form.candidatures) }}
             {{ form_errors(form.candidatures) }}
+            <button class="btn btn-primary" type="submit"><i class="far fa-save"></i> Enregistrer mon vote</button>
+            <br /><br />
             <div class="row" id="lightgallery">
                 {% for candidatField in form.candidatures %}
                     <div class="col-md-6">
@@ -55,8 +57,8 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#lightgallery").lightGallery({
-                    'selector': '.card-jf'
-                });
+                'selector': '.card-jf'
+            });
         });
     </script>
 {% endblock %}

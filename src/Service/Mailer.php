@@ -31,6 +31,7 @@ class Mailer
         private ClubRepository $clubRepository,
         private CandidatRepository $candidatRepository,
         private PdfFactory $pdfFactory,
+        private VoteService $voteService,
         RequestStack $requestStack
     ) {
         $this->flashBag = $requestStack->getSession()?->getFlashBag();
@@ -127,7 +128,7 @@ class Mailer
                 ]
             );
 
-        $pdf = $this->pdfFactory->create($club);
+        $pdf = $this->pdfFactory->createForProposition($club);
 
         if ($pdf) {
             $message->attach(
@@ -144,6 +145,7 @@ class Mailer
      */
     public function votesFinish(Club $club): void
     {
+        $votes = $this->voteService->getVotesByClub($club);
         $message = (new TemplatedEmail())
             ->from($this->email)
             ->to($club->getEmail())
@@ -154,18 +156,10 @@ class Mailer
             ->context(
                 [
                     'club' => $club,
+                    'votes' => $votes,
                     'candidats' => $this->candidatRepository->getByClub($club),
                 ]
             );
-
-        $pdf = $this->pdfFactory->create($club);
-
-        if ($pdf) {
-            $message->attach(
-                $pdf,
-                'propositions.pdf'
-            );
-        }
 
         $this->mailer->send($message);
     }

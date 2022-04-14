@@ -6,6 +6,7 @@ use AcMarche\MeriteSportif\Entity\Token;
 use AcMarche\MeriteSportif\Token\TokenManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/token')]
 class TokenController extends AbstractController
 {
-    public function __construct(private TokenManager $tokenManager)
+    public function __construct(private TokenManager $tokenManager, private ParameterBagInterface $parameterBag)
     {
     }
 
@@ -41,7 +42,10 @@ class TokenController extends AbstractController
         $user = $token->getUser();
         $this->tokenManager->loginUser($request, $user, 'main');
 
-        // return $this->redirectToRoute('vote_intro');
+        if ($this->parameterBag->get('merite.vote_activate') == true) {
+            return $this->redirectToRoute('vote_intro');
+        }
+
         return $this->redirectToRoute('proposition_index');
     }
 }

@@ -11,17 +11,20 @@ use Knp\Snappy\Pdf;
 
 class PdfFactory
 {
-    public function __construct(private CandidatRepository $candidatRepository, private Pdf $pdf, private SluggerInterface $slugger, private Environment $environment)
-    {
+    public function __construct(
+        private CandidatRepository $candidatRepository,
+        private Pdf $pdf,
+        private Environment $environment
+    ) {
     }
 
-    public function create(Club $club): string
+    public function createForProposition(Club $club): string
     {
         $html = $this->environment->render(
             '@AcMarcheMeriteSportif/pdf/proposition_finish.html.twig',
             [
                 'club' => $club,
-                'candidats' => $this->candidatRepository->getByClub($club)
+                'candidats' => $this->candidatRepository->getByClub($club),
             ]
         );
 

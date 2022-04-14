@@ -2,20 +2,20 @@
 
 namespace AcMarche\MeriteSportif\Controller;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use AcMarche\MeriteSportif\Entity\Categorie;
 use AcMarche\MeriteSportif\Entity\Club;
 use AcMarche\MeriteSportif\Form\VotesType;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
 use AcMarche\MeriteSportif\Repository\CategorieRepository;
-use AcMarche\MeriteSportif\Repository\ClubRepository;
 use AcMarche\MeriteSportif\Repository\VoteRepository;
+use AcMarche\MeriteSportif\Service\Mailer;
 use AcMarche\MeriteSportif\Service\VoteManager;
 use AcMarche\MeriteSportif\Service\VoteService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,7 +31,8 @@ class VoteController extends AbstractController
         private VoteRepository $voteRepository,
         private VoteService $voteService,
         private VoteManager $voteManager,
-        private ParameterBagInterface $parameterBag
+        private ParameterBagInterface $parameterBag,
+        private Mailer $mailer
     ) {
     }
 
@@ -104,8 +105,8 @@ class VoteController extends AbstractController
             $isComplete = $this->voteService->isComplete($club);
 
             if ($isComplete) {
-                //todo one email
-                //   $this->mailer->propositionFinish($club);
+                $this->mailer->votesFinish($club);
+
                 return $this->redirectToRoute('vote_show');
             }
 

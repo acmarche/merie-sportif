@@ -5,7 +5,7 @@
     {% include '@AcMarcheMeriteSportif/vote/_titre.html.twig' %}
 
     <div class="alert alert-info">
-        Pour que votre vote soit valide, merci de voter pour chaque catégorie.
+        Pour que votre vote soit valide, <strong>merci de voter pour chaque catégorie.</strong>
     </div>
     <br />
     {% for categorie in categories %}
@@ -17,7 +17,7 @@
                     </div>
                     <div class="col-2">
                         {% if categorie.complete %}
-                            <span class="float-right" title="Voté"><i class="fas fa-check" style="color: #1c7430;"></i></span>
+                            <span class="float-end" title="Voté"><i class="fas fa-check" style="color: #1c7430;"></i></span>
                         {% endif %}
                     </div>
                 </div>
