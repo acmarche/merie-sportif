@@ -1,0 +1,12 @@
+@import '~bootstrap';
+@import '~lightgallery/css/lightgallery-bundle.min.css';
+
+label.required:after {
+    content: " *";
+    color: red;
+}
+
+legend.required:after {
+    content: " *";
+    color: red;
+}
