@@ -27,7 +27,7 @@ class Categorie implements Stringable
     private int $ordre;
     #[ORM\OneToMany(targetEntity: Candidat::class, mappedBy: 'categorie')]
     private array|Collection $candidats;
-    #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'categorie', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'categorie', orphanRemoval: true, cascade: ['remove'])]
     private array|Collection $votes;
     private bool $complete = false;
     private int $proposition = 0;

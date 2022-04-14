@@ -39,6 +39,7 @@ class Candidat implements Stringable, TimestampableInterface
     #[ORM\Column(type: 'string', length: 150, nullable: true)]
     private ?string $sport;
     #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'candidats')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL', nullable: true)]
     private ?Categorie $categorie = null;
     #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'candidat', orphanRemoval: true)]
     private Collection|array $votes;
