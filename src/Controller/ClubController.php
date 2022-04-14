@@ -113,7 +113,7 @@ class ClubController extends AbstractController
         );
     }
 
-    #[Route(path: '/{id}', name: 'club_delete', methods: ['DELETE'])]
+    #[Route(path: '/{id}', name: 'club_delete', methods: ['POST'])]
     public function delete(Request $request, Club $club): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete'.$club->getId(), $request->request->get('_token'))) {
