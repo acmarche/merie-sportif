@@ -42,7 +42,11 @@ class SpreadsheetFactory
             $colonne++;
             $sheet->setCellValue($colonne.$ligne, $vote->getPoint());
             $colonne++;
-            $sheet->setCellValue($colonne.$ligne, $vote->getCreatedAt()->format('d-m-Y H:i'));
+            $date = $vote->getCreatedAt();
+            if ($date) {
+                $date = $date->format('d-m-Y H:i');
+            }
+            $sheet->setCellValue($colonne.$ligne, $date);
             ++$ligne;
         }
 
