@@ -42,7 +42,7 @@ class TokenController extends AbstractController
         $user = $token->getUser();
         $this->tokenManager->loginUser($request, $user, 'main');
 
-        if ($this->parameterBag->get('merite.vote_activate') == true) {
+        if ($this->parameterBag->get('merite.vote_activate') == "true") {
             return $this->redirectToRoute('vote_intro');
         }
 
