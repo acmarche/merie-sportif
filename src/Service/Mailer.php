@@ -24,7 +24,7 @@ use Symfony\Component\Mime\Email;
 class Mailer
 {
     private FlashBagInterface $flashBag;
-    private string $email = 'maxime.bodson@marche.be';
+    private string $email = 'quentin.wilmet@marche.be';
 
     public function __construct(
         private MailerInterface $mailer,
