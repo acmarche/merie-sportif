@@ -2,6 +2,11 @@
 
 <br/><br/>
 
-<a href="{{ url('merite_token_show',{'value':value}) }}">Proposer des candidats</a>
-
+<a href="{{ url('merite_token_show',{'value':value}) }}">
+    {% if vote_activate == 'true' %}
+        Voter pour les candidats
+    {% else %}
+        Proposer des candidats
+    {% endif %}
+</a>
 <br/><br/>
