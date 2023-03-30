@@ -5,14 +5,12 @@ namespace AcMarche\MeriteSportif\Controller;
 use Doctrine\Persistence\ManagerRegistry;
 use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Entity\Categorie;
-use AcMarche\MeriteSportif\Form\CandidatType;
 use AcMarche\MeriteSportif\Form\PropositionType;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
 use AcMarche\MeriteSportif\Repository\CategorieRepository;
 use AcMarche\MeriteSportif\Service\Mailer;
 use AcMarche\MeriteSportif\Service\PropositionService;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,9 +98,8 @@ class PropositionController extends AbstractController
             ]
         );
     }
-    /**
-     * @Security("is_granted('CANDIDAT_EDIT', candidat)")
-     */
+
+    #[IsGranted('CANDIDAT_EDIT', subject: 'candidat')]
     #[Route(path: '/{id}', name: 'proposition_show', methods: ['GET'])]
     public function show(Candidat $candidat) : Response
     {
@@ -112,9 +109,8 @@ class PropositionController extends AbstractController
             ]
         );
     }
-    /**
-     * @Security("is_granted('CANDIDAT_EDIT', candidat)")
-     */
+
+    #[IsGranted('CANDIDAT_EDIT', subject: 'candidat')]
     #[Route(path: '/{id}/edit', name: 'proposition_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Candidat $candidat) : Response
     {
