@@ -9,7 +9,7 @@ use AcMarche\MeriteSportif\Form\CategorieType;
 use AcMarche\MeriteSportif\Repository\CategorieRepository;
 use AcMarche\MeriteSportif\Repository\VoteRepository;
 use AcMarche\MeriteSportif\Service\VoteService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

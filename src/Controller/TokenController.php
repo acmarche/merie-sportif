@@ -4,7 +4,7 @@ namespace AcMarche\MeriteSportif\Controller;
 
 use AcMarche\MeriteSportif\Entity\Token;
 use AcMarche\MeriteSportif\Token\TokenManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;

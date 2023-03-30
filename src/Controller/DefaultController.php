@@ -12,7 +12,7 @@ namespace AcMarche\MeriteSportif\Controller;
 
 use AcMarche\MeriteSportif\Repository\VoteRepository;
 use AcMarche\MeriteSportif\Service\SpreadsheetFactory;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;

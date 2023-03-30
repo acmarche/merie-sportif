@@ -8,7 +8,7 @@ use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Form\CandidatType;
 use AcMarche\MeriteSportif\Form\SearchCandidatType;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

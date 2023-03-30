@@ -12,7 +12,7 @@ use AcMarche\MeriteSportif\Service\Mailer;
 use AcMarche\MeriteSportif\Service\VoteManager;
 use AcMarche\MeriteSportif\Service\VoteService;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
