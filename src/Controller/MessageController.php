@@ -17,7 +17,7 @@ use AcMarche\MeriteSportif\Service\Mailer;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/message')]
 #[IsGranted('ROLE_MERITE_ADMIN')]

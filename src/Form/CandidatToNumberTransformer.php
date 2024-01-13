@@ -28,7 +28,7 @@ class CandidatToNumberTransformer implements DataTransformerInterface
      * @param Candidat|null $issue
      * @return string
      */
-    public function transform($issue)
+    public function transform($issue): mixed
     {
         if (!$issue instanceof Candidat) {
             return '';
