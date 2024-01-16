@@ -13,14 +13,15 @@ namespace AcMarche\MeriteSportif\Service;
 
 use AcMarche\MeriteSportif\Entity\Club;
 use AcMarche\MeriteSportif\Entity\User;
-use AcMarche\MeriteSportif\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserService
 {
-    public function __construct(private UserRepository $userRepository, private UserPasswordHasherInterface $userPasswordEncoder, private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private UserPasswordHasherInterface $userPasswordEncoder,
+        private EntityManagerInterface $entityManager
+    ) {
     }
 
     public function createUser(Club $club): User
@@ -41,15 +42,4 @@ class UserService
         return $user;
     }
 
-    public function changePasswordForAll(): void
-    {
-        foreach ($this->userRepository->findAll() as $user) {
-            if ($user->getUserIdentifier() === 'jkets' || $user->getUserIdentifier() === 'jfsenechal') {
-                $password = 'x';
-            }
-            $user->setPassword($this->userPasswordEncoder->hashPassword($user, $password));
-        }
-
-        $this->entityManager->flush();
-    }
 }

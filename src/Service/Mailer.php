@@ -15,6 +15,7 @@ use AcMarche\MeriteSportif\Entity\Club;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
 use AcMarche\MeriteSportif\Repository\ClubRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -23,32 +24,32 @@ use Symfony\Component\Mime\Email;
 
 class Mailer
 {
-    private FlashBagInterface $flashBag;
-    private string $email = 'quentin.wilmet@marche.be';
-
     public function __construct(
+        #[Autowire(env: '%MERITE_EMAIL%')]
+        private string $email,
         private MailerInterface $mailer,
         private ClubRepository $clubRepository,
         private CandidatRepository $candidatRepository,
         private PdfFactory $pdfFactory,
         private VoteService $voteService,
-        RequestStack $requestStack
+        private RequestStack $requestStack
     ) {
-        $this->flashBag = $requestStack->getSession()?->getFlashBag();
+
     }
 
     public function handle(array $data): void
     {
+        $flashBag = $this->requestStack->getSession()?->getFlashBag();
         foreach ($this->clubRepository->findAll() as $club) {
             $user = $club->getUser();
             if ($user === null) {
-                $this->flashBag->add('error', $club->getNom().' a pas de compte user');
+                $flashBag->add('error', $club->getNom().' a pas de compte user');
                 continue;
             }
 
             $token = $user->getToken();
             if ($token === null) {
-                $this->flashBag->add('error', $club->getNom().' a pas de token');
+                $flashBag->add('error', $club->getNom().' a pas de token');
                 continue;
             }
 
@@ -64,7 +65,8 @@ class Mailer
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface $e) {
-            $this->flashBag->add('danger', $e->getMessage());
+            $flashBag = $this->requestStack->getSession()?->getFlashBag();
+            $flashBag->add('danger', $e->getMessage());
         }
     }
 

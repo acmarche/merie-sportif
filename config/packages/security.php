@@ -35,6 +35,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'logout' => [
             'path' => 'app_logout',
         ],
+        'login_throttling' => [
+            'max_attempts' => 6, // per minute...
+        ],
         'form_login' => [],
         'entry_point' => MeriteAuthenticator::class,
         'switch_user' => true,
@@ -50,6 +53,5 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ],
         ]
     );
-
-
+    
 };

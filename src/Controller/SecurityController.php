@@ -9,8 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 class SecurityController extends AbstractController
 {
@@ -24,8 +24,8 @@ class SecurityController extends AbstractController
     {
         /** @var $session Session */
         $session = $request->getSession();
-        $authErrorKey = Security::AUTHENTICATION_ERROR;
-        $lastUsernameKey = Security::LAST_USERNAME;
+        $authErrorKey = SecurityRequestAttributes::AUTHENTICATION_ERROR;
+        $lastUsernameKey = SecurityRequestAttributes::LAST_USERNAME;
         // get the error if any (works with forward and redirect -- see below)
         if ($request->attributes->has($authErrorKey)) {
             $error = $request->attributes->get($authErrorKey);
