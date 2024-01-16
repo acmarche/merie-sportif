@@ -25,7 +25,7 @@ use Symfony\Component\Mime\Email;
 class Mailer
 {
     public function __construct(
-        #[Autowire(env: '%MERITE_EMAIL%')]
+        #[Autowire(env: 'MERITE_EMAIL')]
         private string $email,
         private MailerInterface $mailer,
         private ClubRepository $clubRepository,

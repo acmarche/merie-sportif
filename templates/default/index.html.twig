@@ -7,7 +7,7 @@
             <img src="{{ asset('bundles/acmarchemeritesportif/marche.png') }}" style="height: 90px;" alt="logo">
         </div>
         <div class="col-6 text-center"><br/>
-            <h3><strong>Challenge & Mérites Sportifs {{ merite.year }}</strong></h3>
+            <h3><strong>Challenge & Mérites Sportifs {{ merite_year }}</strong></h3>
         </div>
         <div class="col-3">
             <img src="{{ asset('bundles/acmarchemeritesportif/csl.jpg') }}" style="height: 90px;" alt="logo">
@@ -20,14 +20,14 @@
         Elle récompensera également des sportifs et des clubs par la remise du prix du mérite sportif et
         du challenge sportif.
     </p>
-    {% if is_granted('ROLE_MERITE_CLUB') and vote_activate == 'true' %}
+    {% if is_granted('ROLE_MERITE_CLUB') and merite_vote_activate == 'true' %}
         <p class="mt-5">
             <a class="btn btn-primary" href="{{ path('vote_show') }}">Mon vote<span
                         class="sr-only">(current)</span></a>
         </p>
     {% endif %}
 
-    {% if is_granted('ROLE_MERITE_CLUB') and proposition_activate == 'true' %}
+    {% if is_granted('ROLE_MERITE_CLUB') and merite_proposition_activate == 'true' %}
         <p class="mt-5">
             <a class="btn btn-primary" href="{{ path('proposition_index') }}">Proposer des candidats<span
                         class="sr-only">(current)</span></a>

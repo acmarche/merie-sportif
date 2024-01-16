@@ -23,7 +23,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->load('AcMarche\MeriteSportif\\', __DIR__.'/../src/*')
         ->exclude([__DIR__.'/../src/{Entity,Tests2}']);
 
-
     $services->set(TokenManager::class)
         ->arg('$formLoginAuthenticator', service('security.authenticator.form_login.main'));
 
