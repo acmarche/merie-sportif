@@ -25,8 +25,8 @@ class TokenController extends AbstractController
     #[IsGranted('ROLE_MERITE_ADMIN')]
     public function index(): RedirectResponse
     {
-        $this->tokenManager->createForAllUsers();
-        $this->addFlash('success', 'Les tokens ont bien été générés');
+        //$this->tokenManager->createForAllUsers();
+        //$this->addFlash('success', 'Les tokens ont bien été générés');
 
         return $this->redirectToRoute('merite_user_index');
     }
