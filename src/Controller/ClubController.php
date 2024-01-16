@@ -9,12 +9,12 @@ use AcMarche\MeriteSportif\Service\UserService;
 use AcMarche\MeriteSportif\Service\VoteService;
 use AcMarche\MeriteSportif\Token\TokenManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/club')]
 #[IsGranted('ROLE_MERITE_ADMIN')]
@@ -36,7 +36,8 @@ class ClubController extends AbstractController
         $clubs = $this->clubRepository->getAll();
         $this->voteService->setIsComplete($clubs);
 
-        return $this->render('@AcMarcheMeriteSportif/club/index.html.twig',
+        return $this->render(
+            '@AcMarcheMeriteSportif/club/index.html.twig',
             [
                 'clubs' => $clubs,
             ]
@@ -51,6 +52,12 @@ class ClubController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            if ($this->clubRepository->findOneByEmail($club->getEmail())) {
+                $this->addFlash('danger', 'Un club a déjà cette adresse mail');
+
+                return $this->redirectToRoute('club_new');
+            }
+
             $this->entityManager->persist($club);
             $user = $this->userService->createUser($club);
             $this->tokenManager->generate($user);
@@ -61,7 +68,8 @@ class ClubController extends AbstractController
             return $this->redirectToRoute('club_index');
         }
 
-        return $this->render('@AcMarcheMeriteSportif/club/new.html.twig',
+        return $this->render(
+            '@AcMarcheMeriteSportif/club/new.html.twig',
             [
                 'club' => $club,
                 'form' => $form->createView(),
@@ -75,7 +83,8 @@ class ClubController extends AbstractController
         $votes = $this->voteService->getVotesByClub($club);
         $isComplete = $this->voteService->isComplete($club);
 
-        return $this->render('@AcMarcheMeriteSportif/club/show.html.twig',
+        return $this->render(
+            '@AcMarcheMeriteSportif/club/show.html.twig',
             [
                 'club' => $club,
                 'votes' => $votes,
@@ -105,7 +114,8 @@ class ClubController extends AbstractController
             //    return $this->redirectToRoute('club_index');
         }
 
-        return $this->render('@AcMarcheMeriteSportif/club/edit.html.twig',
+        return $this->render(
+            '@AcMarcheMeriteSportif/club/edit.html.twig',
             [
                 'club' => $club,
                 'form' => $form->createView(),

@@ -17,6 +17,7 @@ class ClubRepository extends ServiceEntityRepository
 {
 
     use OrmCrudTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Club::class);
@@ -29,6 +30,15 @@ class ClubRepository extends ServiceEntityRepository
             ->orderBy('c.nom', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function findOneByEmail(string $email): ?Club
+    {
+        return $this->createQueryBuilder('club')
+            ->andWhere('club.email = :val')
+            ->setParameter('val', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 }

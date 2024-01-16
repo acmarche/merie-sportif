@@ -13,29 +13,31 @@ namespace AcMarche\MeriteSportif\Service;
 
 use AcMarche\MeriteSportif\Entity\Club;
 use AcMarche\MeriteSportif\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
+use AcMarche\MeriteSportif\Repository\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserService
 {
     public function __construct(
         private UserPasswordHasherInterface $userPasswordEncoder,
-        private EntityManagerInterface $entityManager
+        private UserRepository $userRepository
     ) {
     }
 
     public function createUser(Club $club): User
     {
+        if (!$user = $this->userRepository->findOneByEmail($club->getEmail())) {
+            $user = new User();
+            $user->setUsername($club->getEmail());
+        }
+
         $password = random_int(9999, 999999);
-        $email = $club->getEmail();
-        $user = new User();
-        $user->setUsername($email);
         $user->setNom($club->getNom());
         $user->setPassword($this->userPasswordEncoder->hashPassword($user, $password));
         $user->addRole('ROLE_MERITE');
         $user->addRole('ROLE_MERITE_CLUB');
 
-        $this->entityManager->persist($user);
+        $this->userRepository->persist($user);
 
         $club->setUser($user);
 
