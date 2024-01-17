@@ -52,6 +52,8 @@ class ClubController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $club->setEmail(strtolower($club->getEmail()));
+
             if ($this->clubRepository->findOneByEmail($club->getEmail())) {
                 $this->addFlash('danger', 'Un club a déjà cette adresse mail');
 
@@ -101,6 +103,7 @@ class ClubController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $club->setEmail(strtolower($club->getEmail()));
             $this->entityManager->flush();
             if ($club->getEmail() !== $oldEmail) {
                 $user = $club->getUser();
@@ -111,7 +114,7 @@ class ClubController extends AbstractController
 
             $this->addFlash('success', 'Club modifié');
 
-            //    return $this->redirectToRoute('club_index');
+            return $this->redirectToRoute('club_show', ['id' => $club->getId()]);
         }
 
         return $this->render(
