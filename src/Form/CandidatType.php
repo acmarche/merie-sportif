@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class CandidatType extends AbstractType
@@ -78,6 +79,15 @@ class CandidatType extends AbstractType
                 [
                     'required' => false,
                     'label' => 'Image',
+                    'constraints' => [
+                        new File([
+                            'maxSize' => '3000k',
+                            'mimeTypes' => [
+                                'image/*',
+                            ],
+                            'mimeTypesMessage' => 'Veuillez télécharger une image valide',
+                        ]),
+                    ],
                 ]
             )
             ->add(
