@@ -4,12 +4,12 @@
         {% if merite_proposition_activate == 'true' %}
             <li class="nav-item">
                 <a href="{{ path('proposition_index') }}" class="nav-link">
-                    <i class="fas fa-pen"></i> Proposer des candidats</a>
+                    <i class="ti ti-pencil"></i> Proposer des candidats</a>
             </li>
         {% endif %}
         {% if merite_vote_activate == 'true' %}
             <li class="nav-item">
-                <a class="nav-link" href="{{ path('vote_show') }}"> <i class="fas fa-pen"></i> Mon vote</a>
+                <a class="nav-link" href="{{ path('vote_show') }}"> <i class="ti ti-pencil"></i> Mon vote</a>
             </li>
         {% endif %}
     {% endif %}
@@ -57,11 +57,11 @@
 <ul class="navbar-nav mb-2 mb-lg-0">
     {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
         <li class="nav-item">
-            <a href="{{ path('app_login') }}" class="nav-link"><i class="fas fa-sign-in-alt"></i>
+            <a href="{{ path('app_login') }}" class="nav-link"><i class="ti ti-login-2"></i>
                 Se connecter</a>
         </li>
     {% else %}
-        <li class="nav-item"><a href="{{ path('app_logout') }}" class="nav-link"><i class="fas fa-sign-out-alt"></i>
+        <li class="nav-item"><a href="{{ path('app_logout') }}" class="nav-link"><i class="ti ti-logout-2"></i>
                 Déconnexion</a>
         </li>
     {% endif %}

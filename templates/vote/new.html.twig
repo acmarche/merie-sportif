@@ -25,7 +25,7 @@
             {{ form_errors(form) }}
             {{ form_label(form.candidatures) }}
             {{ form_errors(form.candidatures) }}
-            <button class="btn btn-primary" type="submit"><i class="far fa-save"></i> Enregistrer mon vote</button>
+            <button class="btn btn-primary" type="submit"><i class="ti ti-device-floppy"></i> Enregistrer mon vote</button>
             <br /><br />
             <div class="row" id="lightgallery">
                 {% for candidatField in form.candidatures %}
@@ -46,7 +46,7 @@
                     <p class="alert alert-danger">Aucun candidats pour cette catégorie !</p>
                 {% endfor %}
             </div>
-            <button class="btn btn-primary" type="submit"><i class="far fa-save"></i> Enregistrer mon vote</button>
+            <button class="btn btn-primary" type="submit"><i class="ti ti-device-floppy"></i> Enregistrer mon vote</button>
             {{ form_end(form) }}
         </div>
     </div>
