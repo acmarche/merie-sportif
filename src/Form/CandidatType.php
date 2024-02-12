@@ -38,7 +38,7 @@ class CandidatType extends AbstractType
                 'description',
                 CKEditorType::class,
                 [
-                    'config_name' => 'sepulture_config',
+                    'config_name' => 'acmarche_config',
                     'attr' => [
                         'rows' => 8,
                     ],
@@ -49,7 +49,7 @@ class CandidatType extends AbstractType
                 'palmares',
                 CKEditorType::class,
                 [
-                    'config_name' => 'sepulture_config',
+                    'config_name' => 'acmarche_config',
                     'attr' => [
                         'rows' => 8,
                     ],
