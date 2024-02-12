@@ -19,6 +19,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 class Candidat implements Stringable, TimestampableInterface
 {
     use TimestampableTrait;
+    use UuidTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

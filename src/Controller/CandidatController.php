@@ -2,17 +2,17 @@
 
 namespace AcMarche\MeriteSportif\Controller;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Doctrine\Persistence\ManagerRegistry;
 use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Form\CandidatType;
 use AcMarche\MeriteSportif\Form\SearchCandidatType;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/candidat')]
 #[IsGranted('ROLE_MERITE_ADMIN')]
@@ -50,9 +50,12 @@ class CandidatController extends AbstractController
     public function new(Request $request): Response
     {
         $candidat = new Candidat();
+
         $form = $this->createForm(CandidatType::class, $candidat);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $candidat->setUuid($candidat->generateUuid());
             $entityManager = $this->managerRegistry->getManager();
             $entityManager->persist($candidat);
             $entityManager->flush();
@@ -71,7 +74,7 @@ class CandidatController extends AbstractController
         );
     }
 
-    #[Route(path: '/{id}', name: 'candidat_show', methods: ['GET'])]
+    #[Route(path: '/{uuid}', name: 'candidat_show', methods: ['GET'])]
     public function show(Candidat $candidat): Response
     {
         return $this->render(
@@ -93,7 +96,7 @@ class CandidatController extends AbstractController
 
             $this->addFlash('success', 'Candidat modifié');
 
-            return $this->redirectToRoute('candidat_show', ['id' => $candidat->getId()]);
+            return $this->redirectToRoute('candidat_show', ['uuid' => $candidat->getUuid()]);
         }
 
         $response = new Response(null, $form->isSubmitted() ? Response::HTTP_ACCEPTED : Response::HTTP_OK);

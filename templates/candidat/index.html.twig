@@ -54,7 +54,7 @@
                 {% for candidat in candidats %}
                     <tr>
                         <td>
-                            <a href="{{ path('candidat_show', {'id': candidat.id}) }}">
+                            <a href="{{ path('candidat_show', {'uuid': candidat.uuid}) }}">
                                 {{ candidat.nom }}</a>
                         </td>
                         <td>{{ candidat.prenom }}</td>

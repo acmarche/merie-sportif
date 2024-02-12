@@ -37,7 +37,7 @@
             <ul class="list-group">
                 {% for candidat in categorie.candidats %}
                     <li class="list-group-item"><a
-                                href="{{ path('candidat_show', {'id': candidat.id}) }}">{{ candidat }}</a>
+                                href="{{ path('candidat_show', {'uuid': candidat.uuid}) }}">{{ candidat }}</a>
                     </li>
                 {% endfor %}
             </ul>
