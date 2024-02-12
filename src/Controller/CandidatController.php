@@ -85,7 +85,7 @@ class CandidatController extends AbstractController
         );
     }
 
-    #[Route(path: '/{id}/edit', name: 'candidat_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/{uuid}/edit', name: 'candidat_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Candidat $candidat): Response
     {
         $form = $this->createForm(CandidatType::class, $candidat);
@@ -111,7 +111,7 @@ class CandidatController extends AbstractController
         );
     }
 
-    #[Route(path: '/{id}', name: 'candidat_delete', methods: ['POST'])]
+    #[Route(path: '/{uuid}', name: 'candidat_delete', methods: ['POST'])]
     public function delete(Request $request, Candidat $candidat): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete'.$candidat->getId(), $request->request->get('_token'))) {
