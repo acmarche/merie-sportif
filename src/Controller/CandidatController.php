@@ -34,11 +34,15 @@ class CandidatController extends AbstractController
             $candidats = $candidatRepository->getAll();
         }
 
-        return $this->render('@AcMarcheMeriteSportif/candidat/index.html.twig',
+        $response = new Response(null, $form->isSubmitted() ? Response::HTTP_ACCEPTED : Response::HTTP_OK);
+
+        return $this->render(
+            '@AcMarcheMeriteSportif/candidat/index.html.twig',
             [
                 'candidats' => $candidats,
                 'form' => $form->createView(),
             ]
+            , $response
         );
     }
 
@@ -58,7 +62,8 @@ class CandidatController extends AbstractController
             return $this->redirectToRoute('candidat_index');
         }
 
-        return $this->render('@AcMarcheMeriteSportif/candidat/new.html.twig',
+        return $this->render(
+            '@AcMarcheMeriteSportif/candidat/new.html.twig',
             [
                 'candidat' => $candidat,
                 'form' => $form->createView(),
@@ -69,7 +74,8 @@ class CandidatController extends AbstractController
     #[Route(path: '/{id}', name: 'candidat_show', methods: ['GET'])]
     public function show(Candidat $candidat): Response
     {
-        return $this->render('@AcMarcheMeriteSportif/candidat/show.html.twig',
+        return $this->render(
+            '@AcMarcheMeriteSportif/candidat/show.html.twig',
             [
                 'candidat' => $candidat,
             ]
@@ -90,11 +96,15 @@ class CandidatController extends AbstractController
             return $this->redirectToRoute('candidat_show', ['id' => $candidat->getId()]);
         }
 
-        return $this->render('@AcMarcheMeriteSportif/candidat/edit.html.twig',
+        $response = new Response(null, $form->isSubmitted() ? Response::HTTP_ACCEPTED : Response::HTTP_OK);
+
+        return $this->render(
+            '@AcMarcheMeriteSportif/candidat/edit.html.twig',
             [
                 'candidat' => $candidat,
                 'form' => $form->createView(),
             ]
+            , $response
         );
     }
 
