@@ -22,11 +22,18 @@ use Symfony\Component\Routing\Attribute\Route;
 #[IsGranted('ROLE_MERITE_CLUB')]
 class PropositionController extends AbstractController
 {
-    public function __construct(private CategorieRepository $categorieRepository, private CandidatRepository $candidatRepository, private Mailer $mailer, private PropositionService $propositionService, private ParameterBagInterface $parameterBag, private ManagerRegistry $managerRegistry)
-    {
+    public function __construct(
+        private CategorieRepository $categorieRepository,
+        private CandidatRepository $candidatRepository,
+        private Mailer $mailer,
+        private PropositionService $propositionService,
+        private ParameterBagInterface $parameterBag,
+        private ManagerRegistry $managerRegistry
+    ) {
     }
+
     #[Route(path: '/', name: 'proposition_index', methods: ['GET'])]
-    public function index(CandidatRepository $candidatRepository) : Response
+    public function index(CandidatRepository $candidatRepository): Response
     {
         $user = $this->getUser();
         $club = $user->getClub();
@@ -39,15 +46,18 @@ class PropositionController extends AbstractController
             }
         }
         $complete = $this->propositionService->isComplete($club);
-        return $this->render('@AcMarcheMeriteSportif/proposition/index.html.twig',
+
+        return $this->render(
+            '@AcMarcheMeriteSportif/proposition/index.html.twig',
             [
                 'categories' => $categories,
-                'complete' => $complete
+                'complete' => $complete,
             ]
         );
     }
+
     #[Route(path: '/new/{id}', name: 'proposition_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Categorie $categorie) : Response
+    public function new(Request $request, Categorie $categorie): Response
     {
         if ($this->parameterBag->get('merite.proposition_activate') == false) {
             $this->addFlash('warning', 'Les propositions sont clôturées');
@@ -62,6 +72,7 @@ class PropositionController extends AbstractController
             return $this->redirectToRoute('proposition_index');
         }
         $candidat = new Candidat();
+        $candidat->setUuid($candidat->generateUuid());
         $candidat->setValidate(false);
         $candidat->setAddBy($club->getEmail());
         $candidat->setCategorie($categorie);
@@ -90,7 +101,9 @@ class PropositionController extends AbstractController
 
             return $this->redirectToRoute('proposition_index');
         }
-        return $this->render('@AcMarcheMeriteSportif/proposition/new.html.twig',
+
+        return $this->render(
+            '@AcMarcheMeriteSportif/proposition/new.html.twig',
             [
                 'categorie' => $categorie,
                 'candidat' => $candidat,
@@ -101,9 +114,10 @@ class PropositionController extends AbstractController
 
     #[IsGranted('CANDIDAT_EDIT', subject: 'candidat')]
     #[Route(path: '/{id}', name: 'proposition_show', methods: ['GET'])]
-    public function show(Candidat $candidat) : Response
+    public function show(Candidat $candidat): Response
     {
-        return $this->render('@AcMarcheMeriteSportif/proposition/show.html.twig',
+        return $this->render(
+            '@AcMarcheMeriteSportif/proposition/show.html.twig',
             [
                 'candidat' => $candidat,
             ]
@@ -112,7 +126,7 @@ class PropositionController extends AbstractController
 
     #[IsGranted('CANDIDAT_EDIT', subject: 'candidat')]
     #[Route(path: '/{id}/edit', name: 'proposition_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Candidat $candidat) : Response
+    public function edit(Request $request, Candidat $candidat): Response
     {
         if ($this->parameterBag->get('merite.proposition_activate') == false) {
             $this->addFlash('warning', 'Les propositions sont clôturées');
@@ -128,7 +142,9 @@ class PropositionController extends AbstractController
 
             return $this->redirectToRoute('proposition_index');
         }
-        return $this->render('@AcMarcheMeriteSportif/proposition/edit.html.twig',
+
+        return $this->render(
+            '@AcMarcheMeriteSportif/proposition/edit.html.twig',
             [
                 'candidat' => $candidat,
                 'form' => $form->createView(),
