@@ -121,7 +121,7 @@ class Mailer
             ->to($club->getEmail())
             //->addTo('jf@marche.be')
             ->bcc($this->email)
-            ->subject('Vos propositions pour le Challenge & Mérites Sportifs 2019')
+            ->subject('Vos propositions pour le Challenge & Mérites Sportifs')
             ->htmlTemplate('@AcMarcheMeriteSportif/message/_proposition_finish.html.twig')
             ->context(
                 [
@@ -153,7 +153,7 @@ class Mailer
             ->to($club->getEmail())
             //->addTo('jf@marche.be')
             ->bcc($this->email)
-            ->subject('Vos votes pour le Challenge & Mérites Sportifs 2019')
+            ->subject('Vos votes pour le Challenge & Mérites Sportifs')
             ->htmlTemplate('@AcMarcheMeriteSportif/message/_vote_finish.html.twig')
             ->context(
                 [
