@@ -121,7 +121,7 @@ class VoteController extends AbstractController
                 'candidats' => $categorie->getCandidats(),
                 'form' => $form->createView(),
             ]
-        );
+        ,$response);
     }
 
     #[Route(path: '/show', name: 'vote_show', methods: ['GET'])]
