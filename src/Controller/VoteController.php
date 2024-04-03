@@ -113,6 +113,8 @@ class VoteController extends AbstractController
             return $this->redirectToRoute('vote_intro');
         }
 
+        $response = new Response(null, $form->isSubmitted() ? Response::HTTP_ACCEPTED : Response::HTTP_OK);
+
         return $this->render('@AcMarcheMeriteSportif/vote/new.html.twig',
             [
                 'categorie' => $categorie,
