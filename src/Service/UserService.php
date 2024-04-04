@@ -27,7 +27,6 @@ class UserService
     public function createUser(Club $club): User
     {
         if (!$user = $this->userRepository->findOneByEmail($club->getEmail())) {
-            dd($user);
             $user = new User();
             $user->setUsername($club->getEmail());
         }
