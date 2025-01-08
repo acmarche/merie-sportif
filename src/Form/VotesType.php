@@ -10,9 +10,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class VotesType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
-        $builder->add(
+        $formBuilder->add(
             'candidatures',
             CollectionType::class,
             [

@@ -12,13 +12,12 @@ namespace AcMarche\MeriteSportif\Form;
 
 use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
-use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class CandidatToNumberTransformer implements DataTransformerInterface
 {
-    public function __construct(private CandidatRepository $candidatRepository)
+    public function __construct(private readonly CandidatRepository $candidatRepository)
     {
     }
 

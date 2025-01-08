@@ -14,15 +14,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SearchCandidatType extends AbstractType
 {
-    public function __construct(private CandidatRepository $candidatRepository)
+    public function __construct(private readonly CandidatRepository $candidatRepository)
     {
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
         $sports = $this->candidatRepository->getAllSports();
 
-        $builder
+        $formBuilder
             ->add(
                 'nom',
                 SearchType::class,
@@ -48,9 +48,9 @@ class SearchCandidatType extends AbstractType
             );
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $optionsResolver): void
     {
-        $resolver->setDefaults(
+        $optionsResolver->setDefaults(
             [
 
             ]

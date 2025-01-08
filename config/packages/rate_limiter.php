@@ -2,8 +2,8 @@
 
 use Symfony\Config\FrameworkConfig;
 
-return static function (FrameworkConfig $framework) {
-    $framework->rateLimiter()
+return static function (FrameworkConfig $frameworkConfig): void {
+    $frameworkConfig->rateLimiter()
         ->limiter('anonymous_api')
         ->policy('fixed_window')
         ->limit(30)

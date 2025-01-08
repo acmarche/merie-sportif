@@ -2,6 +2,7 @@
 
 namespace AcMarche\MeriteSportif\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,43 +24,56 @@ class Candidat implements Stringable, TimestampableInterface
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $id;
-    #[ORM\Column(type: 'string', length: 100)]
+
+    #[ORM\Column(type: Types::STRING, length: 100)]
     private ?string $nom = null;
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+
+    #[ORM\Column(type: Types::STRING, length: 100, nullable: true)]
     private ?string $prenom = null;
-    #[ORM\Column(type: 'text', nullable: true)]
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
-    #[ORM\Column(type: 'text', nullable: true)]
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $palmares = null;
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private ?string $add_by;
-    #[ORM\Column(type: 'boolean')]
-    private ?bool $validate = false;
-    #[ORM\Column(type: 'string', length: 150, nullable: true)]
-    private ?string $sport;
+
+    #[ORM\Column(type: Types::STRING, length: 100, nullable: true)]
+    private ?string $add_by = null;
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private ?bool $validate = true;
+
+    #[ORM\Column(type: Types::STRING, length: 150, nullable: true)]
+    private ?string $sport = null;
+
     #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'candidats')]
     #[ORM\JoinColumn(onDelete: 'SET NULL', nullable: true)]
     private ?Categorie $categorie = null;
+
+    /**
+     * @var Collection<int, Vote>
+     */
     #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'candidat', orphanRemoval: true)]
     private Collection|array $votes;
 
     #[Vich\UploadableField(mapping: 'candidat_image', fileNameProperty: 'imageName', size: 'imageSize')]
     private ?File $imageFile = null;
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $imageName = null;
-    #[ORM\Column(type: 'integer', nullable: true)]
+
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $imageSize = null;
+
     /**
      * Utilisez pendant le vote
      */
-    private int $position;
+    private int $position = 0;
 
     public function __construct()
     {
-        $this->position = 0;
-        $this->validate = true;
         $this->votes = new ArrayCollection();
     }
 
@@ -87,7 +101,7 @@ class Candidat implements Stringable, TimestampableInterface
     {
         $this->imageFile = $imageFile;
 
-        if (null !== $imageFile) {
+        if ($imageFile instanceof File) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new DateTimeImmutable();

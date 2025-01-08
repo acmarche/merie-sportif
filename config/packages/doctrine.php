@@ -1,5 +1,6 @@
 <?php
 
+use AcMarche\MeriteSportif\Doctrine\Rand;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -17,7 +18,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 ],
                 'dql' => [
                     'numeric_functions' => [
-                        'Rand' => 'AcMarche\MeriteSportif\Doctrine\Rand'
+                        'Rand' => Rand::class
                     ]
                 ],
             ],

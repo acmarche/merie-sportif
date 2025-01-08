@@ -8,9 +8,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class PropositionType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
-        $builder
+        $formBuilder
             ->remove('categorie')
             ->remove('validate')
             ->add(

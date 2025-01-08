@@ -19,21 +19,21 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserService
 {
     public function __construct(
-        private UserPasswordHasherInterface $userPasswordEncoder,
-        private UserRepository $userRepository
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
+        private readonly UserRepository $userRepository
     ) {
     }
 
     public function createUser(Club $club): User
     {
-        if (!$user = $this->userRepository->findOneByEmail($club->getEmail())) {
+        if (!$user = $this->userRepository->findOneByEmail($club->getEmail()) instanceof User) {
             $user = new User();
             $user->setUsername($club->getEmail());
         }
 
         $password = random_int(9999, 999999);
         $user->setNom($club->getNom());
-        $user->setPassword($this->userPasswordEncoder->hashPassword($user, $password));
+        $user->setPassword($this->userPasswordHasher->hashPassword($user, $password));
         $user->addRole('ROLE_MERITE');
         $user->addRole('ROLE_MERITE_CLUB');
 

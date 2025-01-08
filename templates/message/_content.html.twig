@@ -3,7 +3,7 @@
 <br/><br/>
 
 <a href="{{ url('merite_token_show',{'value':value}) }}">
-    {% if merite_vote_activate == 'true' %}
+    {% if setting.mode == 'Vote' %}
         Voter pour les candidats
     {% else %}
         Proposer des candidats

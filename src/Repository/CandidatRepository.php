@@ -3,11 +3,9 @@
 namespace AcMarche\MeriteSportif\Repository;
 
 use AcMarche\MeriteSportif\Doctrine\OrmCrudTrait;
-use Doctrine\ORM\QueryBuilder;
 use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Entity\Categorie;
 use AcMarche\MeriteSportif\Entity\Club;
-use AcMarche\MeriteSportif\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -20,30 +18,31 @@ use Doctrine\Persistence\ManagerRegistry;
 class CandidatRepository extends ServiceEntityRepository
 {
     use OrmCrudTrait;
-    public function __construct(ManagerRegistry $registry)
+
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, Candidat::class);
+        parent::__construct($managerRegistry, Candidat::class);
     }
 
-    public function getAll()
+    /**
+     * @return Candidat[]
+     */
+    public function getAll(): array
     {
-        return $this->createQueryBuilder('c')
+        return $this
+            ->createQueryBuilder('c')
             ->orderBy('c.nom', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
-    public function getQueryBuilder(Categorie $categorie): QueryBuilder
+    /**
+     * @return Candidat[]
+     */
+    public function getByCategorie(Categorie $categorie): array
     {
-        return $this->createQueryBuilder('candidat')
-            ->andWhere('candidat.categorie = :categorie')
-            ->setParameter('categorie', $categorie)
-            ->orderBy('candidat.nom', 'ASC');
-    }
-
-    public function getByCategorie(Categorie $categorie)
-    {
-        return $this->createQueryBuilder('candidat')
+        return $this
+            ->createQueryBuilder('candidat')
             ->andWhere('candidat.categorie = :categorie')
             ->setParameter('categorie', $categorie)
             ->orderBy('RAND()')
@@ -51,10 +50,15 @@ class CandidatRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getByClub(Club $club)
+    /**
+     * @return Candidat[]
+     */
+    public function getByClub(Club $club): array
     {
         $email = $club->getEmail();
-        return $this->createQueryBuilder('candidat')
+
+        return $this
+            ->createQueryBuilder('candidat')
             ->andWhere('candidat.add_by = :email')
             ->setParameter('email', $email)
             ->getQuery()
@@ -63,7 +67,8 @@ class CandidatRepository extends ServiceEntityRepository
 
     public function isAlreadyProposed(Club $club, Categorie $categorie): ?Candidat
     {
-        return $this->createQueryBuilder('candidat')
+        return $this
+            ->createQueryBuilder('candidat')
             ->andWhere('candidat.categorie = :categorie')
             ->setParameter('categorie', $categorie)
             ->andWhere('candidat.add_by = :user')
@@ -73,65 +78,50 @@ class CandidatRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findAllGroupByName()
-    {
-        /**
-         * SELECT ANY_VALUE(d.id), d.nom, count(d.nom) as lignes
-         * FROM defunts d GROUP BY d.nom ORDER BY d.nom ASC.
-         */
-        $qb = $this->createQueryBuilder('d');
-        //$qb->select('ANY_VALUE(d.id) as id, d.nom, count(d.nom) as lignes');
-        $qb->select('d.id, d.nom, count(d.nom) as lignes');
-        $qb->groupBy('d.nom');
-        $qb->orderBy('d.nom');
-
-        $query = $qb->getQuery();
-
-        return $query->getResult();
-    }
-
+    /**
+     * @return array<int,string>
+     */
     public function getAllSports(): array
     {
         $sports = [];
-        $candidats = $this->createQueryBuilder('c')
-            //  ->select('ANY_VALUE(c.id) as id, c.sport, count(c.sport) as lignes')
-            //  ->select('c.id, c.sport, count(c.sport) as lignes')
-            // ->groupBy('c.sport')
-            ->orderBy('c.sport', 'ASC')
-            ->getQuery()
-            ->getResult();
 
-        foreach ($candidats as $candidat) {
+        foreach ($this->getAll() as $candidat) {
             $sports[$candidat->getSport()] = $candidat->getSport();
         }
-
+ksort($sports);
         return $sports;
     }
 
     /**
-     * @param string $nom
-     * @param string $sport
+     * @param string|null $nom
+     * @param string|null $sport
+     * @param Categorie|null $categorie
      * @return Candidat[]
      */
-    public function search(?string $nom, ?string $sport, ?Categorie $categorie)
+    public function search(?string $nom, ?string $sport, ?Categorie $categorie): array
     {
-        $qb = $this->createQueryBuilder('candidat');
+        $queryBuilder = $this->createQueryBuilder('candidat');
 
         if ($nom) {
-            $qb->andWhere('candidat.nom LIKE :nom OR candidat.prenom LIKE :nom')
-                ->setParameter('nom', '%' . $nom . '%');
+            $queryBuilder
+                ->andWhere('candidat.nom LIKE :nom OR candidat.prenom LIKE :nom')
+                ->setParameter('nom', '%'.$nom.'%');
         }
 
         if ($sport) {
-            $qb->andWhere('candidat.sport LIKE :sport')
-                ->setParameter('sport', '%' . $sport . '%');
+            $queryBuilder
+                ->andWhere('candidat.sport LIKE :sport')
+                ->setParameter('sport', '%'.$sport.'%');
         }
 
-        if ($categorie !== null) {
-            $qb->andWhere('candidat.categorie = :categorie')
+        if ($categorie instanceof Categorie) {
+            $queryBuilder
+                ->andWhere('candidat.categorie = :categorie')
                 ->setParameter('categorie', $categorie);
         }
-        return $qb->orderBy('candidat.nom', 'ASC')
+
+        return $queryBuilder
+            ->orderBy('candidat.nom', 'ASC')
             ->getQuery()
             ->getResult();
     }

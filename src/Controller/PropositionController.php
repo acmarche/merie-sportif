@@ -2,49 +2,48 @@
 
 namespace AcMarche\MeriteSportif\Controller;
 
-use Doctrine\Persistence\ManagerRegistry;
 use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Entity\Categorie;
 use AcMarche\MeriteSportif\Form\PropositionType;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
 use AcMarche\MeriteSportif\Repository\CategorieRepository;
+use AcMarche\MeriteSportif\Repository\SettingRepository;
 use AcMarche\MeriteSportif\Service\Mailer;
 use AcMarche\MeriteSportif\Service\PropositionService;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use AcMarche\MeriteSportif\Setting\SettingEnum;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/proposition')]
 #[IsGranted('ROLE_MERITE_CLUB')]
 class PropositionController extends AbstractController
 {
     public function __construct(
-        private CategorieRepository $categorieRepository,
-        private CandidatRepository $candidatRepository,
-        private Mailer $mailer,
-        private PropositionService $propositionService,
-        private ParameterBagInterface $parameterBag,
-        private ManagerRegistry $managerRegistry
-    ) {
-    }
+        private readonly CategorieRepository $categorieRepository,
+        private readonly CandidatRepository $candidatRepository,
+        private readonly Mailer $mailer,
+        private readonly PropositionService $propositionService,
+        private readonly SettingRepository $settingRepository,
+    ) {}
 
     #[Route(path: '/', name: 'proposition_index', methods: ['GET'])]
-    public function index(CandidatRepository $candidatRepository): Response
+    public function index(): Response
     {
         $user = $this->getUser();
         $club = $user->getClub();
         $categories = $this->categorieRepository->findAll();
-        foreach ($categories as $categorie) {
-            $candidat = $this->candidatRepository->isAlreadyProposed($club, $categorie);
-            if ($candidat !== null) {
-                $categorie->setComplete(true);
-                $categorie->setProposition($candidat->getId());
+        foreach ($categories as $category) {
+            $candidat = $this->candidatRepository->isAlreadyProposed($club, $category);
+            if ($candidat instanceof Candidat) {
+                $category->setComplete(true);
+                $category->setProposition($candidat->getId());
             }
         }
+
         $complete = $this->propositionService->isComplete($club);
 
         return $this->render(
@@ -52,43 +51,45 @@ class PropositionController extends AbstractController
             [
                 'categories' => $categories,
                 'complete' => $complete,
-            ]
+            ],
         );
     }
 
     #[Route(path: '/new/{id}', name: 'proposition_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Categorie $categorie): Response
     {
-        if ($this->parameterBag->get('merite.proposition_activate') == false) {
+        $setting = $this->settingRepository->findOne();
+        if ($setting->mode === SettingEnum::MODE_VOTE) {
             $this->addFlash('warning', 'Les propositions sont clôturées');
 
             return $this->redirectToRoute('proposition_index');
         }
+
         $user = $this->getUser();
         $club = $user->getClub();
-        if ($this->candidatRepository->isAlreadyProposed($club, $categorie) !== null) {
+        if ($this->candidatRepository->isAlreadyProposed($club, $categorie) instanceof Candidat) {
             $this->addFlash('warning', 'Vous avez déjà proposé un candidat pour cette catégorie');
 
             return $this->redirectToRoute('proposition_index');
         }
+
         $candidat = new Candidat();
         $candidat->setUuid($candidat->generateUuid());
         $candidat->setValidate(false);
         $candidat->setAddBy($club->getEmail());
         $candidat->setCategorie($categorie);
+
         $form = $this->createForm(PropositionType::class, $candidat);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->managerRegistry->getManager();
-            $entityManager->persist($candidat);
-            $entityManager->flush();
+            $this->candidatRepository->persist($candidat);
+            $this->candidatRepository->flush();
 
             $this->addFlash('success', 'Le candidat a bien été proposé');
 
             try {
                 $this->mailer->newPropositionMessage($candidat, $club);
             } catch (TransportExceptionInterface) {
-
             }
 
             if ($this->propositionService->isComplete($club)) {
@@ -108,7 +109,7 @@ class PropositionController extends AbstractController
                 'categorie' => $categorie,
                 'candidat' => $candidat,
                 'form' => $form->createView(),
-            ]
+            ],
         );
     }
 
@@ -120,7 +121,7 @@ class PropositionController extends AbstractController
             '@AcMarcheMeriteSportif/proposition/show.html.twig',
             [
                 'candidat' => $candidat,
-            ]
+            ],
         );
     }
 
@@ -128,15 +129,17 @@ class PropositionController extends AbstractController
     #[Route(path: '/{id}/edit', name: 'proposition_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Candidat $candidat): Response
     {
-        if ($this->parameterBag->get('merite.proposition_activate') == false) {
+        $setting = $this->settingRepository->findOne();
+        if ($setting->mode === SettingEnum::MODE_VOTE) {
             $this->addFlash('warning', 'Les propositions sont clôturées');
 
             return $this->redirectToRoute('proposition_index');
         }
+
         $form = $this->createForm(PropositionType::class, $candidat);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->managerRegistry->getManager()->flush();
+            $this->candidatRepository->flush();
 
             $this->addFlash('success', 'Le candidat a bien été modifié');
 
@@ -148,7 +151,7 @@ class PropositionController extends AbstractController
             [
                 'candidat' => $candidat,
                 'form' => $form->createView(),
-            ]
+            ],
         );
     }
 }

@@ -3,12 +3,12 @@
 namespace AcMarche\MeriteSportif\Controller;
 
 use AcMarche\MeriteSportif\Entity\Club;
+use AcMarche\MeriteSportif\Entity\User;
 use AcMarche\MeriteSportif\Form\ClubType;
 use AcMarche\MeriteSportif\Repository\ClubRepository;
 use AcMarche\MeriteSportif\Service\UserService;
 use AcMarche\MeriteSportif\Service\VoteService;
 use AcMarche\MeriteSportif\Token\TokenManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,13 +21,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ClubController extends AbstractController
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private ClubRepository $clubRepository,
-        private VoteService $voteService,
-        private UserService $userService,
-        private TokenManager $tokenManager
-    ) {
-    }
+        private readonly ClubRepository $clubRepository,
+        private readonly VoteService $voteService,
+        private readonly UserService $userService,
+        private readonly TokenManager $tokenManager,
+    ) {}
 
     #[Route(path: '/', name: 'club_index', methods: ['GET'])]
     #[IsGranted('ROLE_MERITE_ADMIN')]
@@ -40,7 +38,7 @@ class ClubController extends AbstractController
             '@AcMarcheMeriteSportif/club/index.html.twig',
             [
                 'clubs' => $clubs,
-            ]
+            ],
         );
     }
 
@@ -51,19 +49,18 @@ class ClubController extends AbstractController
         $form = $this->createForm(ClubType::class, $club);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $club->setEmail(strtolower((string)$club->getEmail()));
 
-            $club->setEmail(strtolower($club->getEmail()));
-
-            if ($this->clubRepository->findOneByEmail($club->getEmail())) {
+            if ($this->clubRepository->findOneByEmail($club->getEmail()) instanceof Club) {
                 $this->addFlash('danger', 'Un club a déjà cette adresse mail');
 
                 return $this->redirectToRoute('club_new');
             }
 
-            $this->entityManager->persist($club);
+            $this->clubRepository->persist($club);
             $user = $this->userService->createUser($club);
             $this->tokenManager->generate($user);
-            $this->entityManager->flush();
+            $this->clubRepository->flush();
 
             $this->addFlash('success', 'Club ajouté');
 
@@ -75,7 +72,7 @@ class ClubController extends AbstractController
             [
                 'club' => $club,
                 'form' => $form->createView(),
-            ]
+            ],
         );
     }
 
@@ -91,7 +88,7 @@ class ClubController extends AbstractController
                 'club' => $club,
                 'votes' => $votes,
                 'voteIsComplete' => $isComplete,
-            ]
+            ],
         );
     }
 
@@ -102,12 +99,11 @@ class ClubController extends AbstractController
         $form = $this->createForm(ClubType::class, $club);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $club->setEmail(strtolower($club->getEmail()));
-            $this->entityManager->flush();
+            $club->setEmail(strtolower((string)$club->getEmail()));
+            $this->clubRepository->flush();
             if ($club->getEmail() !== $oldEmail) {
                 $user = $club->getUser();
-                if ($user !== null) {
+                if ($user instanceof User) {
                     $user->setUsername($club->getEmail());
                 }
             }
@@ -122,7 +118,7 @@ class ClubController extends AbstractController
             [
                 'club' => $club,
                 'form' => $form->createView(),
-            ]
+            ],
         );
     }
 
@@ -130,8 +126,8 @@ class ClubController extends AbstractController
     public function delete(Request $request, Club $club): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete'.$club->getId(), $request->request->get('_token'))) {
-            $this->entityManager->remove($club);
-            $this->entityManager->flush();
+            $this->clubRepository->remove($club);
+            $this->clubRepository->flush();
         }
 
         $this->addFlash('success', 'Club supprimé');

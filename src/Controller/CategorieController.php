@@ -6,7 +6,6 @@ use AcMarche\MeriteSportif\Entity\Categorie;
 use AcMarche\MeriteSportif\Form\CategorieType;
 use AcMarche\MeriteSportif\Repository\CategorieRepository;
 use AcMarche\MeriteSportif\Service\VoteService;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,11 +18,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class CategorieController extends AbstractController
 {
     public function __construct(
-        private CategorieRepository $categorieRepository,
-        private VoteService $voteService,
-        private ManagerRegistry $managerRegistry
-    ) {
-    }
+        private readonly CategorieRepository $categorieRepository,
+        private readonly VoteService $voteService,
+    ) {}
 
     #[Route(path: '/', name: 'categorie_index', methods: ['GET'])]
     public function index(): Response
@@ -32,7 +29,7 @@ class CategorieController extends AbstractController
             '@AcMarcheMeriteSportif/categorie/index.html.twig',
             [
                 'categories' => $this->categorieRepository->findAll(),
-            ]
+            ],
         );
     }
 
@@ -43,9 +40,8 @@ class CategorieController extends AbstractController
         $form = $this->createForm(CategorieType::class, $categorie);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->managerRegistry->getManager();
-            $entityManager->persist($categorie);
-            $entityManager->flush();
+            $this->categorieRepository->persist($categorie);
+            $this->categorieRepository->flush();
 
             return $this->redirectToRoute('categorie_index');
         }
@@ -55,7 +51,7 @@ class CategorieController extends AbstractController
             [
                 'categorie' => $categorie,
                 'form' => $form->createView(),
-            ]
+            ],
         );
     }
 
@@ -69,7 +65,7 @@ class CategorieController extends AbstractController
             [
                 'categorie' => $categorie,
                 'votes' => $votes,
-            ]
+            ],
         );
     }
 
@@ -79,7 +75,7 @@ class CategorieController extends AbstractController
         $form = $this->createForm(CategorieType::class, $categorie);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->managerRegistry->getManager()->flush();
+            $this->categorieRepository->flush();
 
             return $this->redirectToRoute('categorie_index');
         }
@@ -89,7 +85,7 @@ class CategorieController extends AbstractController
             [
                 'categorie' => $categorie,
                 'form' => $form->createView(),
-            ]
+            ],
         );
     }
 
@@ -97,9 +93,8 @@ class CategorieController extends AbstractController
     public function delete(Request $request, Categorie $categorie): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete'.$categorie->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->managerRegistry->getManager();
-            $entityManager->remove($categorie);
-            $entityManager->flush();
+            $this->categorieRepository->remove($categorie);
+            $this->categorieRepository->flush();
         }
 
         return $this->redirectToRoute('categorie_index');

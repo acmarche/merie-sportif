@@ -16,9 +16,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class FixCommand extends Command
 {
     public function __construct(
-        private UserRepository $userRepository,
-        private ClubRepository $clubRepository,
-        private CandidatRepository $candidatRepository,
+        private readonly UserRepository $userRepository,
+        private readonly ClubRepository $clubRepository,
+        private readonly CandidatRepository $candidatRepository,
         string $name = null
     ) {
         parent::__construct($name);
@@ -35,6 +35,7 @@ class FixCommand extends Command
         //    $user->setEmail(strtolower($user->getEmail()));
          //   $user->setUsername(strtolower($user->getUsername()));
         }
+
         foreach ($this->clubRepository->findAll() as $club) {
           //  $club->setEmail(strtolower($club->getEmail()));
         }
@@ -42,6 +43,7 @@ class FixCommand extends Command
         foreach ($this->candidatRepository->findAll() as $candidat) {
             $candidat->setUuid($candidat->generateUuid());
         }
+
         $this->userRepository->flush();
 
         return 0;

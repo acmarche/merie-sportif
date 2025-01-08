@@ -20,7 +20,7 @@ class VoteService
 {
     private array $votes = [];
 
-    public function __construct(private VoteRepository $voteRepository, private CategorieRepository $categorieRepository)
+    public function __construct(private readonly VoteRepository $voteRepository, private readonly CategorieRepository $categorieRepository)
     {
     }
 
@@ -32,9 +32,9 @@ class VoteService
     public function getVotesByClub(Club $club): array
     {
         $rows = $this->voteRepository->getByClub($club);
-        foreach ($rows as $data) {
-            $categorie = $data->getCategorie();
-            $vote = ['candidat' => $data->getCandidat(), 'point' => $data->getPoint()];
+        foreach ($rows as $row) {
+            $categorie = $row->getCategorie();
+            $vote = ['candidat' => $row->getCandidat(), 'point' => $row->getPoint()];
             $this->addVote($categorie, $vote);
         }
 
@@ -87,7 +87,7 @@ class VoteService
 
         usort(
             $candidats,
-            fn($a, $b) => (int)$b['point'] <=> (int)$a['point']
+            fn($a, $b): int => (int)$b['point'] <=> (int)$a['point']
         );
 
         return $candidats;

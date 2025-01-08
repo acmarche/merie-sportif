@@ -16,9 +16,9 @@ use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class CandidatType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
-        $builder
+        $formBuilder
             ->add(
                 'nom',
                 TextType::class,
@@ -79,6 +79,7 @@ class CandidatType extends AbstractType
                 [
                     'required' => false,
                     'label' => 'Image',
+                    'download_uri' => false,
                     'constraints' => [
                         new File([
                             'maxSize' => '3000k',
@@ -100,9 +101,9 @@ class CandidatType extends AbstractType
             );
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $optionsResolver): void
     {
-        $resolver->setDefaults(
+        $optionsResolver->setDefaults(
             [
                 'data_class' => Candidat::class,
             ]

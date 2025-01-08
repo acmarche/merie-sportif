@@ -15,16 +15,17 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ClubRepository extends ServiceEntityRepository
 {
-
     use OrmCrudTrait;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, Club::class);
+        parent::__construct($managerRegistry, Club::class);
     }
 
-
-    public function getAll()
+    /**
+     * @return Club[]
+     */
+    public function getAll(): array
     {
         return $this->createQueryBuilder('c')
             ->orderBy('c.nom', 'ASC')

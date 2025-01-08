@@ -15,10 +15,10 @@ use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
 class TokenManager
 {
     public function __construct(
-        private UserAuthenticatorInterface $userAuthenticator,
-        private FormLoginAuthenticator $formLoginAuthenticator,
-        private TokenRepository $tokenRepository,
-        private UserRepository $userRepository
+        private readonly UserAuthenticatorInterface $userAuthenticator,
+        private readonly FormLoginAuthenticator $formLoginAuthenticator,
+        private readonly TokenRepository $tokenRepository,
+        private readonly UserRepository $userRepository
     ) {
     }
 

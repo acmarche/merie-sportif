@@ -7,7 +7,6 @@ use AcMarche\MeriteSportif\Entity\User;
 use AcMarche\MeriteSportif\Form\UserEditType;
 use AcMarche\MeriteSportif\Form\UserType;
 use AcMarche\MeriteSportif\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,17 +19,15 @@ use Symfony\Component\Routing\Attribute\Route;
 class UserController extends AbstractController
 {
     public function __construct(
-        private UserRepository $utilisateurRepository,
-        private UserPasswordHasherInterface $userPasswordEncoder,
-        private EntityManagerInterface $entityManager
+        private readonly UserRepository $userRepository,
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
     ) {
     }
 
     #[Route(path: '/', name: 'merite_user_index', methods: ['GET', 'POST'])]
-    public function index(Request $request): Response
+    public function index(): Response
     {
-        $users = $this->utilisateurRepository->findAll();
-
+        $users = $this->userRepository->findAll();
         return $this->render('@AcMarcheMeriteSportif/user/index.html.twig',
             [
                 'users' => $users,
@@ -41,66 +38,66 @@ class UserController extends AbstractController
     #[Route(path: '/new', name: 'merite_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
-        $utilisateur = new User();
-        $form = $this->createForm(UserType::class, $utilisateur);
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $utilisateur->setPassword(
-                $this->userPasswordEncoder->hashPassword($utilisateur, $utilisateur->getPassword())
+            $user->setPassword(
+                $this->userPasswordHasher->hashPassword($user, $user->getPassword())
             );
-            $this->entityManager->persist($utilisateur);
-            $this->entityManager->flush();
+            $this->userRepository->persist($user);
+            $this->userRepository->flush();
 
-            return $this->redirectToRoute('merite_user_show', ['id' => $utilisateur->getId()]);
+            return $this->redirectToRoute('merite_user_show', ['id' => $user->getId()]);
         }
 
         return $this->render('@AcMarcheMeriteSportif/user/new.html.twig',
             [
-                'user' => $utilisateur,
+                'user' => $user,
                 'form' => $form->createView(),
             ]
         );
     }
 
     #[Route(path: '/{id}', name: 'merite_user_show', methods: ['GET'])]
-    public function show(User $utilisateur): Response
+    public function show(User $user): Response
     {
         return $this->render('@AcMarcheMeriteSportif/user/show.html.twig',
             [
-                'user' => $utilisateur,
+                'user' => $user,
             ]
         );
     }
 
     #[Route(path: '/{id}/edit', name: 'merite_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $utilisateur): Response
+    public function edit(Request $request, User $user): Response
     {
-        $form = $this->createForm(UserEditType::class, $utilisateur);
+        $form = $this->createForm(UserEditType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->flush();
+            $this->userRepository->flush();
 
             return $this->redirectToRoute(
                 'merite_user_show',
-                ['id' => $utilisateur->getId()]
+                ['id' => $user->getId()]
             );
         }
 
         return $this->render('@AcMarcheMeriteSportif/user/edit.html.twig',
             [
-                'user' => $utilisateur,
+                'user' => $user,
                 'form' => $form->createView(),
             ]
         );
     }
 
     #[Route(path: '/{id}', name: 'merite_user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $utilisateur): RedirectResponse
+    public function delete(Request $request, User $user): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete'.$utilisateur->getId(), $request->request->get('_token'))) {
-            $this->entityManager->remove($utilisateur);
-            $this->entityManager->flush();
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $this->userRepository->remove($user);
+            $this->userRepository->flush();
         }
 
         return $this->redirectToRoute('merite_user_index');

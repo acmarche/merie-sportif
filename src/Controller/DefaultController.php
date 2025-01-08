@@ -19,9 +19,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class DefaultController extends AbstractController
 {
-    public function __construct(private VoteRepository $voteRepository, private SpreadsheetFactory $spreadsheetFactory)
-    {
-    }
+    public function __construct(
+        private readonly VoteRepository $voteRepository,
+        private readonly SpreadsheetFactory $spreadsheetFactory,
+    ) {}
 
     #[Route(path: '/', name: 'merite_home', methods: ['GET'])]
     public function index(): Response
@@ -30,7 +31,7 @@ class DefaultController extends AbstractController
             '@AcMarcheMeriteSportif/default/index.html.twig',
             [
 
-            ]
+            ],
         );
     }
 
@@ -41,7 +42,7 @@ class DefaultController extends AbstractController
             '@AcMarcheMeriteSportif/default/contact.html.twig',
             [
 
-            ]
+            ],
         );
     }
 
@@ -55,7 +56,7 @@ class DefaultController extends AbstractController
             '@AcMarcheMeriteSportif/default/resultat.html.twig',
             [
                 'votes' => $votes,
-            ]
+            ],
         );
     }
 
@@ -64,9 +65,9 @@ class DefaultController extends AbstractController
     public function export(): Response
     {
         $votes = $this->voteRepository->getAll();
-        $xls = $this->spreadsheetFactory->createXSL($votes);
+        $spreadsheet = $this->spreadsheetFactory->createXSL($votes);
 
-        return $this->spreadsheetFactory->downloadXls($xls, 'votes.xlsx');
+        return $this->spreadsheetFactory->downloadXls($spreadsheet, 'votes.xlsx');
     }
 
 }

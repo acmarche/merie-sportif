@@ -2,6 +2,7 @@
 
 namespace AcMarche\MeriteSportif\Controller;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +16,7 @@ use Symfony\Component\Security\Http\SecurityRequestAttributes;
 class SecurityController extends AbstractController
 {
     public function __construct(
-        private CsrfTokenManagerInterface $tokenManager
+        private readonly CsrfTokenManagerInterface $csrfTokenManager
     ) {
     }
 
@@ -29,19 +30,21 @@ class SecurityController extends AbstractController
         // get the error if any (works with forward and redirect -- see below)
         if ($request->attributes->has($authErrorKey)) {
             $error = $request->attributes->get($authErrorKey);
-        } elseif (null !== $session && $session->has($authErrorKey)) {
+        } elseif ($session instanceof SessionInterface && $session->has($authErrorKey)) {
             $error = $session->get($authErrorKey);
             $session->remove($authErrorKey);
         } else {
             $error = null;
         }
+
         if (!$error instanceof AuthenticationException) {
             $error = null; // The value does not come from the security component.
         }
+
         // last username entered by the user
-        $lastUsername = (null === $session) ? '' : $session->get($lastUsernameKey);
-        $csrfToken = $this->tokenManager
-            ? $this->tokenManager->getToken('authenticate')->getValue()
+        $lastUsername = ($session instanceof SessionInterface) ? $session->get($lastUsernameKey) : '';
+        $csrfToken = $this->csrfTokenManager
+            ? $this->csrfTokenManager->getToken('authenticate')->getValue()
             : null;
 
         return $this->renderLogin(

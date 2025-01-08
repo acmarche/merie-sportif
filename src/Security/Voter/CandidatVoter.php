@@ -2,6 +2,7 @@
 
 namespace AcMarche\MeriteSportif\Security\Voter;
 
+use AcMarche\MeriteSportif\Entity\Club;
 use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -32,7 +33,6 @@ class CandidatVoter extends Voter
         switch ($attribute) {
             case 'CANDIDAT_EDIT':
                 return $this->canEdit($subject, $user);
-                break;
             case 'POST_VIEW':
                 // logic to determine if the user can VIEW
                 // return true or false
@@ -42,13 +42,13 @@ class CandidatVoter extends Voter
         return false;
     }
 
-    private function canEdit(Candidat $subject, User $user): bool
+    private function canEdit(Candidat $candidat, User $user): bool
     {
         $club = $user->getClub();
-        if ($club === null) {
+        if (!$club instanceof Club) {
             return false;
         }
 
-        return $subject->getAddBy() === $club->getEmail();
+        return $candidat->getAddBy() === $club->getEmail();
     }
 }

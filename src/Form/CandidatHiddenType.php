@@ -10,18 +10,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CandidatHiddenType extends AbstractType
 {
-    public function __construct(private CandidatToNumberTransformer $transformer)
+    public function __construct(private readonly CandidatToNumberTransformer $candidatToNumberTransformer)
     {
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
-        $builder->addModelTransformer($this->transformer);
+        $formBuilder->addModelTransformer($this->candidatToNumberTransformer);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $optionsResolver): void
     {
-        $resolver->setDefaults(
+        $optionsResolver->setDefaults(
             [
                 'invalid_message' => 'The selected candidat does not exist',
             ]

@@ -2,6 +2,7 @@
 
 namespace AcMarche\MeriteSportif\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use DateTimeImmutable;
 use AcMarche\MeriteSportif\Repository\TokenRepository;
 use Stringable;
@@ -19,15 +20,15 @@ class Token implements Stringable
     use UuidTrait;
 
     #[ORM\Id]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    #[ORM\Column(type: 'string', length: 50, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 50, unique: true)]
     #[Assert\NotBlank]
     protected string $value;
 
-    #[ORM\Column(type: 'date', nullable: false)]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     protected DateTimeInterface $expire_at;
 
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'token')]
@@ -39,18 +40,22 @@ class Token implements Stringable
         $this->createdAt = new DateTime();
         $this->updatedAt = new DateTime();
     }
+
     public function __toString(): string
     {
         return $this->value;
     }
+
     public function getId(): ?int
     {
         return $this->id;
     }
+
     public function getValue(): string
     {
         return $this->value;
     }
+
     public function setValue(string $value): self
     {
         $this->value = $value;
@@ -58,20 +63,23 @@ class Token implements Stringable
         return $this;
     }
 
-    public function getExpireAt(): \DateTimeInterface
+    public function getExpireAt(): DateTimeInterface
     {
         return $this->expire_at;
     }
+
     public function setExpireAt(DateTimeInterface $expire_at): self
     {
         $this->expire_at = $expire_at;
 
         return $this;
     }
+
     public function getUser(): User
     {
         return $this->user;
     }
+
     public function setUser(?User $user): self
     {
         $this->user = $user;

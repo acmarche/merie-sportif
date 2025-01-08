@@ -1,0 +1,27 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block body %}
+
+<div class="card bg-light mb-3">
+    <h3 class="card-header">Paramètres</h3>
+    <div class="card-body">
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        <div class="row">
+            <div class="col-md-6">
+                 {{ form_row(form.year) }}
+            </div>
+            <div class="col-md-6">
+        {{ form_row(form.mode) }}
+            </div>
+        </div>
+
+        {{ form_row(form.emails) }}
+
+        <button class="btn btn-primary" type="submit"><i class="ti ti-device-floppy"></i> Sauvegarder</button>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}
+

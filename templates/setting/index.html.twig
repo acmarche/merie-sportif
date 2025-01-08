@@ -1,0 +1,27 @@
+{% extends '@AcMarcheMeriteSportif/layout_front.html.twig' %}
+
+{% block body %}
+    <div class="card bg-light mb-3">
+        <h3 class="card-header">
+            Paramètres
+        </h3>
+        <div class="card-body">
+            <a class="float-right btn btn-primary my-3" href="{{ path('setting_edit',{'id':setting.id}) }}">
+                <i class="ti ti-pencil"></i> Modifier</a>
+            <table class="table table-bordered">
+                <tr>
+                    <th>Année</th>
+                    <td>{{ setting.year }}</td>
+                </tr>
+                <tr>
+                    <th>Mode</th>
+                    <td>{{ setting.mode }}</td>
+                </tr>
+                <tr>
+                    <th>Emails</th>
+                    <td>{{ setting.emails|join(', ') }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+{% endblock %}

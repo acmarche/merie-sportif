@@ -26,20 +26,20 @@ class Mailer
 {
     public function __construct(
         #[Autowire(env: 'MERITE_EMAIL')]
-        private string $email,
-        private MailerInterface $mailer,
-        private ClubRepository $clubRepository,
-        private CandidatRepository $candidatRepository,
-        private PdfFactory $pdfFactory,
-        private VoteService $voteService,
-        private RequestStack $requestStack
+        private readonly string $email,
+        private readonly MailerInterface $mailer,
+        private readonly ClubRepository $clubRepository,
+        private readonly CandidatRepository $candidatRepository,
+        private readonly PdfFactory $pdfFactory,
+        private readonly VoteService $voteService,
+        private readonly RequestStack $requestStack
     ) {
 
     }
 
     public function handle(array $data): void
     {
-        $flashBag = $this->requestStack->getSession()?->getFlashBag();
+        $flashBag = $this->requestStack->getSession()->getFlashBag();
         foreach ($this->clubRepository->findAll() as $club) {
             $user = $club->getUser();
             if ($user === null) {
@@ -64,9 +64,9 @@ class Mailer
     {
         try {
             $this->mailer->send($email);
-        } catch (TransportExceptionInterface $e) {
-            $flashBag = $this->requestStack->getSession()?->getFlashBag();
-            $flashBag->add('danger', $e->getMessage());
+        } catch (TransportExceptionInterface $transportException) {
+            $flashBag = $this->requestStack->getSession()->getFlashBag();
+            $flashBag->add('danger', $transportException->getMessage());
         }
     }
 
@@ -94,7 +94,7 @@ class Mailer
      */
     public function newPropositionMessage(Candidat $candidat, Club $club): void
     {
-        $email = (new TemplatedEmail())
+        $templatedEmail = (new TemplatedEmail())
             ->from($club->getEmail())
             //->to($club->getEmail())
             ->addTo($this->email)
@@ -108,7 +108,7 @@ class Mailer
                 ]
             );
 
-        $this->mailer->send($email);
+        $this->mailer->send($templatedEmail);
     }
 
     /**
@@ -116,7 +116,7 @@ class Mailer
      */
     public function propositionFinish(Club $club): void
     {
-        $message = (new TemplatedEmail())
+        $templatedEmail = (new TemplatedEmail())
             ->from($this->email)
             ->to($club->getEmail())
             //->addTo('jf@marche.be')
@@ -132,14 +132,14 @@ class Mailer
 
         $pdf = $this->pdfFactory->createForProposition($club);
 
-        if ($pdf) {
-            $message->attach(
+        if ($pdf !== '' && $pdf !== '0') {
+            $templatedEmail->attach(
                 $pdf,
                 'propositions.pdf'
             );
         }
 
-        $this->mailer->send($message);
+        $this->mailer->send($templatedEmail);
     }
 
     /**
@@ -148,7 +148,7 @@ class Mailer
     public function votesFinish(Club $club): void
     {
         $votes = $this->voteService->getVotesByClub($club);
-        $message = (new TemplatedEmail())
+        $templatedEmail = (new TemplatedEmail())
             ->from($this->email)
             ->to($club->getEmail())
             //->addTo('jf@marche.be')
@@ -163,6 +163,6 @@ class Mailer
                 ]
             );
 
-        $this->mailer->send($message);
+        $this->mailer->send($templatedEmail);
     }
 }

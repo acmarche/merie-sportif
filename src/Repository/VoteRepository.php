@@ -19,12 +19,15 @@ class VoteRepository extends ServiceEntityRepository
 {
     use OrmCrudTrait;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, Vote::class);
+        parent::__construct($managerRegistry, Vote::class);
     }
 
-    public function getAll()
+    /**
+     * @return Vote[]
+     */
+    public function getAll(): array
     {
         return $this->createQueryBuilder('vote')
             ->leftJoin('vote.candidat', 'candidat', 'WITH')
@@ -41,7 +44,7 @@ class VoteRepository extends ServiceEntityRepository
     /**
      * @return Vote[]
      */
-    public function getByClub(Club $club)
+    public function getByClub(Club $club): array
     {
         return $this->createQueryBuilder('vote')
             ->andWhere('vote.club = :club')
@@ -56,7 +59,7 @@ class VoteRepository extends ServiceEntityRepository
     /**
      * @return Vote[]
      */
-    public function getByClubAndCategorie(Club $club, Categorie $categorie)
+    public function getByClubAndCategorie(Club $club, Categorie $categorie): array
     {
         return $this->createQueryBuilder('vote')
             ->andWhere('vote.club = :club')
@@ -70,7 +73,7 @@ class VoteRepository extends ServiceEntityRepository
     /**
      * @return Vote[]
      */
-    public function getByCategorie(Categorie $categorie)
+    public function getByCategorie(Categorie $categorie): array
     {
         return $this->createQueryBuilder('vote')
             ->andWhere('vote.categorie = :categorie')

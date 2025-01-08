@@ -6,7 +6,6 @@ use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Form\CandidatType;
 use AcMarche\MeriteSportif\Form\SearchCandidatType;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,20 +17,18 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_MERITE_ADMIN')]
 class CandidatController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $managerRegistry)
-    {
-    }
+    public function __construct(private readonly CandidatRepository $candidatRepository) {}
 
     #[Route(path: '/', name: 'candidat_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, CandidatRepository $candidatRepository): Response
+    public function index(Request $request): Response
     {
         $form = $this->createForm(SearchCandidatType::class, []);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $candidats = $candidatRepository->search($data['nom'], $data['sport'], $data['categorie']);
+            $candidats = $this->candidatRepository->search($data['nom'], $data['sport'], $data['categorie']);
         } else {
-            $candidats = $candidatRepository->getAll();
+            $candidats = $this->candidatRepository->getAll();
         }
 
         $response = new Response(null, $form->isSubmitted() ? Response::HTTP_ACCEPTED : Response::HTTP_OK);
@@ -42,7 +39,7 @@ class CandidatController extends AbstractController
                 'candidats' => $candidats,
                 'form' => $form->createView(),
             ]
-            , $response
+            , $response,
         );
     }
 
@@ -54,11 +51,9 @@ class CandidatController extends AbstractController
         $form = $this->createForm(CandidatType::class, $candidat);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
             $candidat->setUuid($candidat->generateUuid());
-            $entityManager = $this->managerRegistry->getManager();
-            $entityManager->persist($candidat);
-            $entityManager->flush();
+            $this->candidatRepository->persist($candidat);
+            $this->candidatRepository->flush();
 
             $this->addFlash('success', 'Candidat ajouté');
 
@@ -70,7 +65,7 @@ class CandidatController extends AbstractController
             [
                 'candidat' => $candidat,
                 'form' => $form->createView(),
-            ]
+            ],
         );
     }
 
@@ -81,7 +76,7 @@ class CandidatController extends AbstractController
             '@AcMarcheMeriteSportif/candidat/show.html.twig',
             [
                 'candidat' => $candidat,
-            ]
+            ],
         );
     }
 
@@ -91,8 +86,7 @@ class CandidatController extends AbstractController
         $form = $this->createForm(CandidatType::class, $candidat);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $this->managerRegistry->getManager()->flush();
+            $this->candidatRepository->flush();
 
             $this->addFlash('success', 'Candidat modifié');
 
@@ -107,7 +101,7 @@ class CandidatController extends AbstractController
                 'candidat' => $candidat,
                 'form' => $form->createView(),
             ]
-            , $response
+            , $response,
         );
     }
 
@@ -115,9 +109,8 @@ class CandidatController extends AbstractController
     public function delete(Request $request, Candidat $candidat): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete'.$candidat->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->managerRegistry->getManager();
-            $entityManager->remove($candidat);
-            $entityManager->flush();
+            $this->candidatRepository->remove($candidat);
+            $this->candidatRepository->flush();
             $this->addFlash('success', 'Candidat supprimé');
         }
 

@@ -17,7 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class VoteManager
 {
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
     }
 

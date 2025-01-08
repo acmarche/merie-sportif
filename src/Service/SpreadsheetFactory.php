@@ -20,10 +20,10 @@ class SpreadsheetFactory
     public function createXSL(array $votes): Spreadsheet
     {
         $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+        $worksheet = $spreadsheet->getActiveSheet();
 
         $c = 1;
-        $sheet
+        $worksheet
             ->setCellValue('A'.$c, 'Candidat')
             ->setCellValue('B'.$c, 'Club')
             ->setCellValue('C'.$c, 'Catégorie')
@@ -34,42 +34,43 @@ class SpreadsheetFactory
 
         foreach ($votes as $vote) {
             $colonne = 'A';
-            $sheet->setCellValue($colonne.$ligne, $vote->getCandidat());
-            $colonne++;
-            $sheet->setCellValue($colonne.$ligne, $vote->getClub());
-            $colonne++;
-            $sheet->setCellValue($colonne.$ligne, $vote->getCategorie());
-            $colonne++;
-            $sheet->setCellValue($colonne.$ligne, $vote->getPoint());
-            $colonne++;
+            $worksheet->setCellValue($colonne.$ligne, $vote->getCandidat());
+            ++$colonne;
+            $worksheet->setCellValue($colonne.$ligne, $vote->getClub());
+            ++$colonne;
+            $worksheet->setCellValue($colonne.$ligne, $vote->getCategorie());
+            ++$colonne;
+            $worksheet->setCellValue($colonne.$ligne, $vote->getPoint());
+            ++$colonne;
             $date = $vote->getCreatedAt();
             if ($date) {
                 $date = $date->format('d-m-Y H:i');
             }
-            $sheet->setCellValue($colonne.$ligne, $date);
+
+            $worksheet->setCellValue($colonne.$ligne, $date);
             ++$ligne;
         }
 
         return $spreadsheet;
     }
 
-    public function downloadXls(Spreadsheet $phpExcelObject, string $fileName): BinaryFileResponse
+    public function downloadXls(Spreadsheet $spreadsheet, string $fileName): BinaryFileResponse
     {
-        $writer = new Xlsx($phpExcelObject);
+        $xlsx = new Xlsx($spreadsheet);
         $temp_file = tempnam(sys_get_temp_dir(), $fileName);
 
         // Create the excel file in the tmp directory of the system
         try {
-            $writer->save($temp_file);
+            $xlsx->save($temp_file);
         } catch (Exception) {
         }
 
-        $response = new BinaryFileResponse($temp_file);
-        $response->setContentDisposition(
+        $binaryFileResponse = new BinaryFileResponse($temp_file);
+        $binaryFileResponse->setContentDisposition(
             ResponseHeaderBag::DISPOSITION_INLINE,
-            $fileName ?? $response->getFile()->getFilename()
+            $fileName ?? $binaryFileResponse->getFile()->getFilename()
         );
 
-        return $response;
+        return $binaryFileResponse;
     }
 }

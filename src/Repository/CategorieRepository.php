@@ -17,9 +17,9 @@ class CategorieRepository extends ServiceEntityRepository
 {
     use OrmCrudTrait;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, Categorie::class);
+        parent::__construct($managerRegistry, Categorie::class);
     }
 
     public function getFirst(): Categorie

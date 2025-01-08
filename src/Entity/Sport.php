@@ -2,6 +2,7 @@
 
 namespace AcMarche\MeriteSportif\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use AcMarche\MeriteSportif\Repository\SportRepository;
 use Stringable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,25 +14,26 @@ class Sport implements Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $id;
-    #[ORM\Column(type: 'string', length: 80)]
-    private ?string $nom;
-    public function __construct()
-    {
-    }
+
+    #[ORM\Column(type: Types::STRING, length: 80)]
+    private ?string $nom = null;
     public function __toString(): string
     {
         return (string) $this->nom;
     }
+
     public function getId(): ?int
     {
         return $this->id;
     }
+
     public function getNom(): ?string
     {
         return $this->nom;
     }
+
     public function setNom(string $nom): self
     {
         $this->nom = $nom;

@@ -2,6 +2,7 @@
 
 namespace AcMarche\MeriteSportif\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use AcMarche\MeriteSportif\Repository\VoteRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,22 +15,19 @@ class Vote
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'votes')]
     #[ORM\JoinColumn(nullable: false)]
     private Categorie $categorie;
-
     #[ORM\ManyToOne(targetEntity: Club::class, inversedBy: 'votes')]
     #[ORM\JoinColumn(nullable: false)]
     private Club $club;
-
     #[ORM\ManyToOne(targetEntity: Candidat::class, inversedBy: 'votes')]
     #[ORM\JoinColumn(nullable: false)]
     private Candidat $candidat;
-
-    #[ORM\Column(type: 'smallint')]
+    #[ORM\Column(type: Types::SMALLINT)]
     private int $point;
 
     public function __construct(Categorie $categorie, Club $club, Candidat $candidat, int $point)

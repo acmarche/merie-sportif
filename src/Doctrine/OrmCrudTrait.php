@@ -2,6 +2,8 @@
 
 namespace AcMarche\MeriteSportif\Doctrine;
 
+use Doctrine\DBAL\Exception;
+
 trait OrmCrudTrait
 {
     public function insert(object $object): void
@@ -32,8 +34,7 @@ trait OrmCrudTrait
 
     /**
      * @deprecated
-     * @return void
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function reset(): void
     {

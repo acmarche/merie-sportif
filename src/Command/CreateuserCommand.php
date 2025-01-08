@@ -22,9 +22,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class CreateuserCommand extends Command
 {
     public function __construct(
-        private UserRepository $userRepository,
-        private UserPasswordHasherInterface $userPasswordEncoder,
-        private EntityManagerInterface $entityManager,
+        private readonly UserRepository $userRepository,
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
+        private readonly EntityManagerInterface $entityManager,
         string $name = null
     ) {
         parent::__construct($name);
@@ -40,7 +40,7 @@ class CreateuserCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
+        $symfonyStyle = new SymfonyStyle($input, $output);
         $helper = $this->getHelper('question');
         $role = 'ROLE_MERITE_ADMIN';
 
@@ -49,13 +49,13 @@ class CreateuserCommand extends Command
         $password = $input->getArgument('password');
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $io->error('Adresse email non valide');
+            $symfonyStyle->error('Adresse email non valide');
 
             return 1;
         }
 
-        if (strlen($name) < 1) {
-            $io->error('Name minium 1');
+        if (strlen((string) $name) < 1) {
+            $symfonyStyle->error('Name minium 1');
 
             return 1;
         }
@@ -66,7 +66,7 @@ class CreateuserCommand extends Command
             $question->setMaxAttempts(5);
             $question->setValidator(
                 function ($password) {
-                    if (strlen($password) < 4) {
+                    if (strlen((string) $password) < 4) {
                         throw new RuntimeException(
                             'Le mot de passe doit faire minimum 4 caractères'
                         );
@@ -79,19 +79,19 @@ class CreateuserCommand extends Command
         }
 
         if ($this->userRepository->findOneBy(['email' => $email]) !== null) {
-            $io->error('Un utilisateur existe déjà avec cette adresse email');
+            $symfonyStyle->error('Un utilisateur existe déjà avec cette adresse email');
 
             return 1;
         }
 
-        $questionAdministrator = new ConfirmationQuestion("Administrateur ? [Y,n] \n", true);
-        $administrator = $helper->ask($input, $output, $questionAdministrator);
+        $confirmationQuestion = new ConfirmationQuestion("Administrateur ? [Y,n] \n", true);
+        $administrator = $helper->ask($input, $output, $confirmationQuestion);
 
         $user = new User();
         $user->setEmail($email);
         $user->setUsername($email);
         $user->setNom($name);
-        $user->setPassword($this->userPasswordEncoder->hashPassword($user, $password));
+        $user->setPassword($this->userPasswordHasher->hashPassword($user, $password));
 
         if ($administrator) {
             $user->addRole($role);
@@ -100,7 +100,7 @@ class CreateuserCommand extends Command
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $io->success("L'utilisateur a bien été créé");
+        $symfonyStyle->success("L'utilisateur a bien été créé");
 
         return 0;
     }

@@ -2,6 +2,7 @@
 
 namespace AcMarche\MeriteSportif\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use AcMarche\MeriteSportif\Repository\CategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Stringable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-#[ORM\Table]
 #[ORM\UniqueConstraint(columns: ['ordre'])]
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
 #[UniqueEntity(fields: ['ordre'], message: 'Une catégorie a déjà cet ordre')]
@@ -17,19 +17,32 @@ class Categorie implements Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $id;
-    #[ORM\Column(type: 'string', length: 100)]
-    private ?string $nom;
-    #[ORM\Column(type: 'text')]
-    private ?string $description;
-    #[ORM\Column(type: 'smallint', nullable: false, unique: true)]
+
+    #[ORM\Column(type: Types::STRING, length: 100)]
+    private ?string $nom = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: false, unique: true)]
     private int $ordre;
+
+    /**
+     * @var Collection<int, Candidat>
+     */
     #[ORM\OneToMany(targetEntity: Candidat::class, mappedBy: 'categorie')]
     private array|Collection $candidats;
+
+    /**
+     * @var Collection<int, Vote>
+     */
     #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'categorie', orphanRemoval: true, cascade: ['remove'])]
     private array|Collection $votes;
+
     private bool $complete = false;
+
     private int $proposition = 0;
 
     public function __construct()
@@ -154,12 +167,12 @@ class Categorie implements Stringable
         return $this;
     }
 
-    public function getOrdre()
+    public function getOrdre(): int
     {
         return $this->ordre;
     }
 
-    public function setOrdre($ordre): self
+    public function setOrdre(int $ordre): self
     {
         $this->ordre = $ordre;
 

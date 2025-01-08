@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[IsGranted('ROLE_MERITE_ADMIN')]
 class MessageController extends AbstractController
 {
-    public function __construct(private Mailer $mailer)
+    public function __construct(private readonly Mailer $mailer)
     {
     }
 

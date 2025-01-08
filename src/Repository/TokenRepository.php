@@ -16,9 +16,9 @@ class TokenRepository extends ServiceEntityRepository
 {
     use OrmCrudTrait;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, Token::class);
+        parent::__construct($managerRegistry, Token::class);
     }
 
 
