@@ -2,6 +2,7 @@
 
 namespace AcMarche\MeriteSportif\Setting;
 
+use AcMarche\MeriteSportif\Entity\Setting;
 use AcMarche\MeriteSportif\Repository\SettingRepository;
 
 /**
@@ -9,19 +10,45 @@ use AcMarche\MeriteSportif\Repository\SettingRepository;
  */
 class SettingService
 {
-    public function __construct(private readonly SettingRepository $settingRepository) {}
+    private ?Setting $setting = null;
+
+    public function __construct(
+        private readonly SettingRepository $settingRepository,
+    ) {}
+
+    public function init(): void
+    {
+        if (!$this->setting) {
+            $this->setting = $this->settingRepository->findOne();
+        }
+    }
 
     public function mode(): string
     {
-        $setting = $this->settingRepository->findOne();
+        $this->init();
 
-        return $setting->mode;
+        return $this->setting->mode;
     }
 
     public function year(): int
     {
-        $setting = $this->settingRepository->findOne();
+        $this->init();
 
-        return $setting->year;
+        return $this->setting->year;
     }
+
+    public function emails(): array
+    {
+        $this->init();
+
+        return $this->setting->emails;
+    }
+
+    public function emailFrom(): string
+    {
+        $this->init();
+
+        return $this->setting->emailFrom;
+    }
+
 }

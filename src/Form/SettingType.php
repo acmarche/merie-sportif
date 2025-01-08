@@ -24,8 +24,12 @@ class SettingType extends AbstractType
                 'label' => 'Mode',
                 'choices' => SettingEnum::modes(),
             ])
+            ->add('emailFrom', EmailType::class, [
+                'label' => 'Email expéditeur',
+                'help' => "Les mails seront envoyés depuis cette adresse",
+            ])
             ->add('emails', CollectionType::class, [
-                'label' => 'Emails',
+                'label' => 'Emails destinataires',
                 'help' => 'Destinataires des notifications',
                 'entry_type' => EmailType::class,
             ]);

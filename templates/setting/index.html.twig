@@ -18,7 +18,11 @@
                     <td>{{ setting.mode }}</td>
                 </tr>
                 <tr>
-                    <th>Emails</th>
+                    <th>Email expéditeur</th>
+                    <td>{{ setting.emailFrom }}</td>
+                </tr>
+                <tr>
+                    <th>Emails destinataires</th>
                     <td>{{ setting.emails|join(', ') }}</td>
                 </tr>
             </table>

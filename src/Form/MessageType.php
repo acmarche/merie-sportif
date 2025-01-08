@@ -14,7 +14,6 @@ class MessageType extends AbstractType
     public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
         $formBuilder
-            ->add('from', EmailType::class)
             ->add('sujet', TextType::class)
             ->add(
                 'texte',

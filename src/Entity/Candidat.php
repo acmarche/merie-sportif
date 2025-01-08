@@ -14,6 +14,7 @@ use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 use Stringable;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: CandidatRepository::class)]
 #[Vich\Uploadable]
@@ -59,6 +60,7 @@ class Candidat implements Stringable, TimestampableInterface
     private Collection|array $votes;
 
     #[Vich\UploadableField(mapping: 'candidat_image', fileNameProperty: 'imageName', size: 'imageSize')]
+    #[Ignore]
     private ?File $imageFile = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]

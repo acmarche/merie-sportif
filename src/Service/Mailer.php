@@ -14,29 +14,29 @@ use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Entity\Club;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
 use AcMarche\MeriteSportif\Repository\ClubRepository;
+use AcMarche\MeriteSportif\Setting\SettingService;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
 class Mailer
 {
     public function __construct(
-        #[Autowire(env: 'MERITE_EMAIL')]
-        private readonly string $email,
         private readonly MailerInterface $mailer,
         private readonly ClubRepository $clubRepository,
         private readonly CandidatRepository $candidatRepository,
         private readonly PdfFactory $pdfFactory,
         private readonly VoteService $voteService,
-        private readonly RequestStack $requestStack
-    ) {
+        private readonly SettingService $settingService,
+        private readonly RequestStack $requestStack,
+    ) {}
 
-    }
-
+    /**
+     * @throws TransportExceptionInterface
+     */
     public function handle(array $data): void
     {
         $flashBag = $this->requestStack->getSession()->getFlashBag();
@@ -60,23 +60,23 @@ class Mailer
         }
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     protected function send(Email $email): void
     {
-        try {
-            $this->mailer->send($email);
-        } catch (TransportExceptionInterface $transportException) {
-            $flashBag = $this->requestStack->getSession()->getFlashBag();
-            $flashBag->add('danger', $transportException->getMessage());
-        }
+        $this->mailer->send($email);
     }
 
     protected function createMessage(array $data, Club $club, string $value): TemplatedEmail
     {
+        $emails = $this->settingService->emails();
+        $email = $this->settingService->emailFrom();
+
         return (new TemplatedEmail())
-            ->from($data['from'])
+            ->from(new Address($email, $club->getEmail()))
             ->to($club->getEmail())
-            ->bcc($this->email)
-            //  ->bcc('jf@marche.be')
+            ->bcc(...$emails)
             ->subject($data['sujet'])
             ->text($data['texte'])
             ->htmlTemplate('@AcMarcheMeriteSportif/message/_content.html.twig')
@@ -85,7 +85,7 @@ class Mailer
                     'club' => $club,
                     'texte' => $data['texte'],
                     'value' => $value,
-                ]
+                ],
             );
     }
 
@@ -94,18 +94,19 @@ class Mailer
      */
     public function newPropositionMessage(Candidat $candidat, Club $club): void
     {
+        $emails = $this->settingService->emails();
+        $email = $this->settingService->emailFrom();
         $templatedEmail = (new TemplatedEmail())
-            ->from($club->getEmail())
-            //->to($club->getEmail())
-            ->addTo($this->email)
-            ->addTo('jd@marche.be')
+            ->from(new Address($email, $club->getEmail()))
+            ->addTo(...$emails)
             ->subject('Une nouvelle proposition pour le mérite')
             ->htmlTemplate('@AcMarcheMeriteSportif/message/_proposition.html.twig')
             ->context(
                 [
-                    'club' => $club,
-                    'candidat' => $candidat,
-                ]
+                    'club' => $club->getNom(),
+                    'candidatNom' => $candidat->getNom(),
+                    'candidatUuid' => $candidat->getUuid(),
+                ],
             );
 
         $this->mailer->send($templatedEmail);
@@ -116,18 +117,18 @@ class Mailer
      */
     public function propositionFinish(Club $club): void
     {
+        $emails = $this->settingService->emails();
+        $email = $this->settingService->emailFrom();
         $templatedEmail = (new TemplatedEmail())
-            ->from($this->email)
+            ->from(new Address($email))
             ->to($club->getEmail())
-            //->addTo('jf@marche.be')
-            ->bcc($this->email)
+            ->bcc(...$emails)
             ->subject('Vos propositions pour le Challenge & Mérites Sportifs')
             ->htmlTemplate('@AcMarcheMeriteSportif/message/_proposition_finish.html.twig')
             ->context(
                 [
-                    'club' => $club,
-                    'candidats' => $this->candidatRepository->getByClub($club),
-                ]
+                    'club' => $club->getNom(),
+                ],
             );
 
         $pdf = $this->pdfFactory->createForProposition($club);
@@ -135,7 +136,7 @@ class Mailer
         if ($pdf !== '' && $pdf !== '0') {
             $templatedEmail->attach(
                 $pdf,
-                'propositions.pdf'
+                'propositions.pdf',
             );
         }
 
@@ -147,12 +148,13 @@ class Mailer
      */
     public function votesFinish(Club $club): void
     {
+        $emails = $this->settingService->emails();
+        $email = $this->settingService->emailFrom();
         $votes = $this->voteService->getVotesByClub($club);
         $templatedEmail = (new TemplatedEmail())
-            ->from($this->email)
+            ->from(new Address($email))
             ->to($club->getEmail())
-            //->addTo('jf@marche.be')
-            ->bcc($this->email)
+            ->bcc(...$emails)
             ->subject('Vos votes pour le Challenge & Mérites Sportifs')
             ->htmlTemplate('@AcMarcheMeriteSportif/message/_vote_finish.html.twig')
             ->context(
@@ -160,7 +162,7 @@ class Mailer
                     'club' => $club,
                     'votes' => $votes,
                     'candidats' => $this->candidatRepository->getByClub($club),
-                ]
+                ],
             );
 
         $this->mailer->send($templatedEmail);

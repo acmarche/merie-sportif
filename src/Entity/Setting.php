@@ -23,4 +23,7 @@ class Setting
     #[ORM\Column()]
     public array $emails = [];
 
+    #[ORM\Column(length: 40)]
+    public string $emailFrom = "";
+
 }

@@ -89,14 +89,15 @@ class PropositionController extends AbstractController
 
             try {
                 $this->mailer->newPropositionMessage($candidat, $club);
-            } catch (TransportExceptionInterface) {
+            } catch (TransportExceptionInterface|\Exception $e) {
+                $this->addFlash('danger', "Erreur envoie du mail ".$e->getMessage());
             }
 
             if ($this->propositionService->isComplete($club)) {
                 try {
                     $this->mailer->propositionFinish($club);
-                } catch (TransportExceptionInterface) {
-                    $this->addFlash('danger', 'Le mail de résumé n\'a pas été envoyé');
+                } catch (TransportExceptionInterface|\Exception $e) {
+                    $this->addFlash('danger', 'Le mail de résumé n\'a pas été envoyé. '.$e->getMessage());
                 }
             }
 
