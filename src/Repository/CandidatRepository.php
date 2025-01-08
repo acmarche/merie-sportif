@@ -88,7 +88,8 @@ class CandidatRepository extends ServiceEntityRepository
         foreach ($this->getAll() as $candidat) {
             $sports[$candidat->getSport()] = $candidat->getSport();
         }
-ksort($sports);
+        ksort($sports);
+
         return $sports;
     }
 
