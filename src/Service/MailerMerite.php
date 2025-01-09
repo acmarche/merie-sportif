@@ -36,9 +36,8 @@ readonly class MailerMerite
 
         return (new TemplatedEmail())
             ->from(new Address($emailFrom, $club->getEmail()))
-            //->to($club->getEmail())
-            ->to(new Address('jf@marche.be',$club->getEmail()))
-            //->bcc(...$emails)
+            ->to($club->getEmail())
+            ->bcc(...$emails)
             ->subject($data['sujet'])
             ->text($data['texte'])
             ->htmlTemplate('@AcMarcheMeriteSportif/message/_content.html.twig')
