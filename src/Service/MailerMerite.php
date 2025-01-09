@@ -35,7 +35,7 @@ readonly class MailerMerite
         $emailFrom = $this->settingService->emailFrom();
 
         return (new TemplatedEmail())
-            ->from(new Address($emailFrom, $club->getEmail()))
+            ->from(new Address($emailFrom))
             ->to($club->getEmail())
             ->bcc(...$emails)
             ->subject($data['sujet'])
@@ -127,9 +127,4 @@ readonly class MailerMerite
 
         $this->mailer->send($templatedEmail);
     }
-
-    public function send(TemplatedEmail $message) {
-
-    }
-
 }
