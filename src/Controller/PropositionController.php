@@ -8,7 +8,7 @@ use AcMarche\MeriteSportif\Form\PropositionType;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
 use AcMarche\MeriteSportif\Repository\CategorieRepository;
 use AcMarche\MeriteSportif\Repository\SettingRepository;
-use AcMarche\MeriteSportif\Service\Mailer;
+use AcMarche\MeriteSportif\Service\MailerMerite;
 use AcMarche\MeriteSportif\Service\PropositionService;
 use AcMarche\MeriteSportif\Setting\SettingEnum;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +25,7 @@ class PropositionController extends AbstractController
     public function __construct(
         private readonly CategorieRepository $categorieRepository,
         private readonly CandidatRepository $candidatRepository,
-        private readonly Mailer $mailer,
+        private readonly MailerMerite $mailer,
         private readonly PropositionService $propositionService,
         private readonly SettingRepository $settingRepository,
     ) {}

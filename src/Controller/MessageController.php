@@ -1,17 +1,10 @@
 <?php
-/**
- * This file is part of meritesportif application
- * @author jfsenechal <jfsenechal@gmail.com>
- * @date 8/10/19
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- */
 
 namespace AcMarche\MeriteSportif\Controller;
 
 use AcMarche\MeriteSportif\Form\MessageType;
-use AcMarche\MeriteSportif\Service\Mailer;
+use AcMarche\MeriteSportif\Repository\ClubRepository;
+use AcMarche\MeriteSportif\Service\MailerMerite;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +17,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_MERITE_ADMIN')]
 class MessageController extends AbstractController
 {
-    public function __construct(private readonly Mailer $mailer) {}
+    public function __construct(
+        private readonly MailerMerite $mailerMerite,
+        private readonly ClubRepository $clubRepository,
+    ) {}
 
     #[Route(path: '/', name: 'merite_message_index', methods: ['GET', 'POST'])]
     public function index(Request $request): RedirectResponse|Response
@@ -32,13 +28,32 @@ class MessageController extends AbstractController
         $form = $this->createForm(MessageType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $this->mailer->handle($form->getData());
-            } catch (TransportExceptionInterface $e) {
-                $this->addFlash('danger', 'Le mail n\'a pas été envoyé. '.$e->getMessage());
+            $data = $form->getData();
+
+            foreach ($this->clubRepository->findAll() as $club) {
+                $user = $club->getUser();
+                if ($user === null) {
+                    $this->addFlash('error', $club->getNom().' a pas de compte user');
+                    continue;
+                }
+
+                $token = $user->getToken();
+                if ($token === null) {
+                    $this->addFlash('error', $club->getNom().' a pas de token');
+                    continue;
+                }
+
+                $value = $token->getValue();
+
+                $message = $this->mailerMerite->createMessage($data, $club, $value);
+                try {
+                    $this->mailerMerite->mailer->send($message);
+                } catch (TransportExceptionInterface $e) {
+                    $this->addFlash('danger', 'Le mail n\'a pas été envoyé. '.$e->getMessage());
+                }
             }
 
-            $this->addFlash('success', 'Message envoyé');
+            $this->addFlash('success', 'Traitement terminé');
 
             return $this->redirectToRoute('merite_message_index');
         }

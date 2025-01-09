@@ -13,54 +13,23 @@ namespace AcMarche\MeriteSportif\Service;
 use AcMarche\MeriteSportif\Entity\Candidat;
 use AcMarche\MeriteSportif\Entity\Club;
 use AcMarche\MeriteSportif\Repository\CandidatRepository;
-use AcMarche\MeriteSportif\Repository\ClubRepository;
 use AcMarche\MeriteSportif\Setting\SettingService;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 
-readonly class Mailer
+readonly class MailerMerite
 {
     public function __construct(
-        private MailerInterface $mailer,
-        private ClubRepository $clubRepository,
+        public MailerInterface $mailer,
         private CandidatRepository $candidatRepository,
         private PdfFactory $pdfFactory,
         private VoteService $voteService,
         private SettingService $settingService,
-        private RequestStack $requestStack,
     ) {}
 
-    /**
-     * @throws TransportExceptionInterface
-     */
-    public function handle(array $data): void
-    {
-        $flashBag = $this->requestStack->getSession()->getFlashBag();
-
-        foreach ($this->clubRepository->findAll() as $club) {
-            $user = $club->getUser();
-            if ($user === null) {
-                $flashBag->add('error', $club->getNom().' a pas de compte user');
-                continue;
-            }
-
-            $token = $user->getToken();
-            if ($token === null) {
-                $flashBag->add('error', $club->getNom().' a pas de token');
-                continue;
-            }
-
-            $value = $token->getValue();
-
-            $message = $this->createMessage($data, $club, $value);
-            $this->mailer->send($message);
-        }
-    }
-
-    protected function createMessage(array $data, Club $club, string $value): TemplatedEmail
+    public function createMessage(array $data, Club $club, string $value): TemplatedEmail
     {
         $emails = $this->settingService->emails();
         $emailFrom = $this->settingService->emailFrom();
@@ -159,4 +128,9 @@ readonly class Mailer
 
         $this->mailer->send($templatedEmail);
     }
+
+    public function send(TemplatedEmail $message) {
+
+    }
+
 }

@@ -9,7 +9,7 @@ use AcMarche\MeriteSportif\Repository\CandidatRepository;
 use AcMarche\MeriteSportif\Repository\CategorieRepository;
 use AcMarche\MeriteSportif\Repository\SettingRepository;
 use AcMarche\MeriteSportif\Repository\VoteRepository;
-use AcMarche\MeriteSportif\Service\Mailer;
+use AcMarche\MeriteSportif\Service\MailerMerite;
 use AcMarche\MeriteSportif\Service\VoteManager;
 use AcMarche\MeriteSportif\Service\VoteService;
 use AcMarche\MeriteSportif\Setting\SettingEnum;
@@ -32,7 +32,7 @@ class VoteController extends AbstractController
         private readonly VoteService $voteService,
         private readonly VoteManager $voteManager,
         private readonly SettingRepository $settingRepository,
-        private readonly Mailer $mailer,
+        private readonly MailerMerite $mailer,
     ) {}
 
     #[Route(path: '/', name: 'vote_index', methods: ['GET'])]
