@@ -39,6 +39,7 @@ readonly class Mailer
     public function handle(array $data): void
     {
         $flashBag = $this->requestStack->getSession()->getFlashBag();
+
         foreach ($this->clubRepository->findAll() as $club) {
             $user = $club->getUser();
             if ($user === null) {

@@ -3,7 +3,6 @@
 use AcMarche\MeriteSportif\Security\LdapMerite;
 use AcMarche\MeriteSportif\Token\TokenManager;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-
 use Symfony\Component\Ldap\Adapter\ExtLdap\Adapter;
 use Symfony\Component\Ldap\Ldap;
 use Symfony\Component\Ldap\LdapInterface;
