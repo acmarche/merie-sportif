@@ -7,8 +7,6 @@ use Symfony\Component\Ldap\Ldap;
 use Symfony\Component\Ldap\LdapInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
-
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('security', [
         'password_hashers' => [
