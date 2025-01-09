@@ -20,18 +20,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
 
-class Mailer
+readonly class Mailer
 {
     public function __construct(
-        private readonly MailerInterface $mailer,
-        private readonly ClubRepository $clubRepository,
-        private readonly CandidatRepository $candidatRepository,
-        private readonly PdfFactory $pdfFactory,
-        private readonly VoteService $voteService,
-        private readonly SettingService $settingService,
-        private readonly RequestStack $requestStack,
+        private MailerInterface $mailer,
+        private ClubRepository $clubRepository,
+        private CandidatRepository $candidatRepository,
+        private PdfFactory $pdfFactory,
+        private VoteService $voteService,
+        private SettingService $settingService,
+        private RequestStack $requestStack,
     ) {}
 
     /**
@@ -56,16 +55,8 @@ class Mailer
             $value = $token->getValue();
 
             $message = $this->createMessage($data, $club, $value);
-            $this->send($message);
+            $this->mailer->send($message);
         }
-    }
-
-    /**
-     * @throws TransportExceptionInterface
-     */
-    protected function send(Email $email): void
-    {
-        $this->mailer->send($email);
     }
 
     protected function createMessage(array $data, Club $club, string $value): TemplatedEmail
@@ -108,7 +99,6 @@ class Mailer
                     'candidatUuid' => $candidat->getUuid(),
                 ],
             );
-
         $this->mailer->send($templatedEmail);
     }
 
