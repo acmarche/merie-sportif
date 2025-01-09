@@ -63,12 +63,13 @@ readonly class Mailer
     protected function createMessage(array $data, Club $club, string $value): TemplatedEmail
     {
         $emails = $this->settingService->emails();
-        $email = $this->settingService->emailFrom();
+        $emailFrom = $this->settingService->emailFrom();
 
         return (new TemplatedEmail())
-            ->from(new Address($email, $club->getEmail()))
-            ->to($club->getEmail())
-            ->bcc(...$emails)
+            ->from(new Address($emailFrom, $club->getEmail()))
+            //->to($club->getEmail())
+            ->to(new Address('jf@marche.be',$club->getEmail()))
+            //->bcc(...$emails)
             ->subject($data['sujet'])
             ->text($data['texte'])
             ->htmlTemplate('@AcMarcheMeriteSportif/message/_content.html.twig')
@@ -87,9 +88,9 @@ readonly class Mailer
     public function newPropositionMessage(Candidat $candidat, Club $club): void
     {
         $emails = $this->settingService->emails();
-        $email = $this->settingService->emailFrom();
+        $emailFrom = $this->settingService->emailFrom();
         $templatedEmail = (new TemplatedEmail())
-            ->from(new Address($email, $club->getEmail()))
+            ->from(new Address($emailFrom, $club->getEmail()))
             ->addTo(...$emails)
             ->subject('Une nouvelle proposition pour le mérite')
             ->htmlTemplate('@AcMarcheMeriteSportif/message/_proposition.html.twig')
@@ -109,9 +110,9 @@ readonly class Mailer
     public function propositionFinish(Club $club): void
     {
         $emails = $this->settingService->emails();
-        $email = $this->settingService->emailFrom();
+        $emailFrom = $this->settingService->emailFrom();
         $templatedEmail = (new TemplatedEmail())
-            ->from(new Address($email))
+            ->from(new Address($emailFrom))
             ->to($club->getEmail())
             ->bcc(...$emails)
             ->subject('Vos propositions pour le Challenge & Mérites Sportifs')
@@ -140,10 +141,10 @@ readonly class Mailer
     public function votesFinish(Club $club): void
     {
         $emails = $this->settingService->emails();
-        $email = $this->settingService->emailFrom();
+        $emailFrom = $this->settingService->emailFrom();
         $votes = $this->voteService->getVotesByClub($club);
         $templatedEmail = (new TemplatedEmail())
-            ->from(new Address($email))
+            ->from(new Address($emailFrom))
             ->to($club->getEmail())
             ->bcc(...$emails)
             ->subject('Vos votes pour le Challenge & Mérites Sportifs')
