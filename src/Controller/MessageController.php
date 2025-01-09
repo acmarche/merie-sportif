@@ -29,7 +29,7 @@ class MessageController extends AbstractController
     #[Route(path: '/', name: 'merite_message_index', methods: ['GET', 'POST'])]
     public function index(Request $request): RedirectResponse|Response
     {
-        $form = $this->createForm(MessageType::class, ['from' => 'csl@marche.be']);
+        $form = $this->createForm(MessageType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
