@@ -8,6 +8,7 @@
             Votre vote est complet. Merci
         {% else %}
             Proposer un candidat pour chaque catégorie
+            ({{ count }})
         {% endif %}
     </div>
 
@@ -15,7 +16,6 @@
         <div class="card-header">
             <h3>Propositions de candidats</h3>
         </div>
-
 
         <div class="card-body">
             {% for categorie in categories %}

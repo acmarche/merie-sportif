@@ -45,12 +45,14 @@ class PropositionController extends AbstractController
         }
 
         $complete = $this->propositionService->isComplete($club);
+        $count = $this->propositionService->countPropo($club);
 
         return $this->render(
             '@AcMarcheMeriteSportif/proposition/index.html.twig',
             [
                 'categories' => $categories,
                 'complete' => $complete,
+                'count'=>$count
             ],
         );
     }
