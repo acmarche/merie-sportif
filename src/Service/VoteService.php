@@ -10,7 +10,6 @@
 
 namespace AcMarche\MeriteSportif\Service;
 
-
 use AcMarche\MeriteSportif\Entity\Categorie;
 use AcMarche\MeriteSportif\Entity\Club;
 use AcMarche\MeriteSportif\Repository\CategorieRepository;
@@ -20,13 +19,14 @@ class VoteService
 {
     private array $votes = [];
 
-    public function __construct(private readonly VoteRepository $voteRepository, private readonly CategorieRepository $categorieRepository)
-    {
-    }
+    public function __construct(
+        private readonly VoteRepository $voteRepository,
+        private readonly CategorieRepository $categorieRepository,
+    ) {}
 
     public function voteExist(Club $club, Categorie $categorie): bool
     {
-        return (bool) $this->voteRepository->getByClubAndCategorie($club, $categorie);
+        return (bool)$this->voteRepository->getByClubAndCategorie($club, $categorie);
     }
 
     public function getVotesByClub(Club $club): array
@@ -87,7 +87,7 @@ class VoteService
 
         usort(
             $candidats,
-            fn($a, $b): int => (int)$b['point'] <=> (int)$a['point']
+            fn($a, $b): int => (int)$b['point'] <=> (int)$a['point'],
         );
 
         return $candidats;
