@@ -52,7 +52,7 @@ class PropositionController extends AbstractController
             [
                 'categories' => $categories,
                 'complete' => $complete,
-                'count'=>$count
+                'count' => $count,
             ],
         );
     }
@@ -84,10 +84,16 @@ class PropositionController extends AbstractController
         $form = $this->createForm(PropositionType::class, $candidat);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->candidatRepository->persist($candidat);
-            $this->candidatRepository->flush();
+            try {
+                $this->candidatRepository->persist($candidat);
+                $this->candidatRepository->flush();
 
-            $this->addFlash('success', 'Le candidat a bien été proposé');
+                $this->addFlash('success', 'Le candidat a bien été proposé');
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'Une erreur a eu lieu.'.$e->getMessage());
+
+                return $this->redirectToRoute('proposition_index');
+            }
 
             try {
                 $this->mailer->newPropositionMessage($candidat, $club);
@@ -106,6 +112,8 @@ class PropositionController extends AbstractController
             return $this->redirectToRoute('proposition_index');
         }
 
+        $response = new Response(null, $form->isSubmitted() ? Response::HTTP_ACCEPTED : Response::HTTP_OK);
+
         return $this->render(
             '@AcMarcheMeriteSportif/proposition/new.html.twig',
             [
@@ -113,6 +121,7 @@ class PropositionController extends AbstractController
                 'candidat' => $candidat,
                 'form' => $form->createView(),
             ],
+            $response,
         );
     }
 
@@ -142,9 +151,17 @@ class PropositionController extends AbstractController
         $form = $this->createForm(PropositionType::class, $candidat);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->candidatRepository->flush();
 
-            $this->addFlash('success', 'Le candidat a bien été modifié');
+            try {
+                $this->candidatRepository->persist($candidat);
+                $this->candidatRepository->flush();
+
+                $this->addFlash('success', 'Le candidat a bien été modifié');
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'Une erreur a eu lieu.'.$e->getMessage());
+
+                return $this->redirectToRoute('proposition_index');
+            }
 
             return $this->redirectToRoute('proposition_index');
         }
