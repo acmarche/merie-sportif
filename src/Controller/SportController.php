@@ -47,7 +47,7 @@ class SportController extends AbstractController
             '@AcMarcheMeriteSportif/sport/new.html.twig',
             [
                 'sport' => $sport,
-                'form' => $form->createView(),
+                'form' => $form,
             ],
         );
     }
@@ -79,7 +79,7 @@ class SportController extends AbstractController
             '@AcMarcheMeriteSportif/sport/edit.html.twig',
             [
                 'sport' => $sport,
-                'form' => $form->createView(),
+                'form' => $form,
             ],
         );
     }

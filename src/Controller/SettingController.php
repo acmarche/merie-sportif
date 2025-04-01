@@ -49,7 +49,7 @@ class SettingController extends AbstractController
         return $this->render(
             '@AcMarcheMeriteSportif/setting/edit.html.twig',
             [
-                'form' => $form->createView(),
+                'form' => $form,
             ],
         );
     }

@@ -119,7 +119,7 @@ class PropositionController extends AbstractController
             [
                 'categorie' => $categorie,
                 'candidat' => $candidat,
-                'form' => $form->createView(),
+                'form' => $form,
             ],
             $response,
         );
@@ -170,7 +170,7 @@ class PropositionController extends AbstractController
             '@AcMarcheMeriteSportif/proposition/edit.html.twig',
             [
                 'candidat' => $candidat,
-                'form' => $form->createView(),
+                'form' => $form,
             ],
         );
     }

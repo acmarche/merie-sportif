@@ -50,7 +50,7 @@ class CategorieController extends AbstractController
             '@AcMarcheMeriteSportif/categorie/new.html.twig',
             [
                 'categorie' => $categorie,
-                'form' => $form->createView(),
+                'form' => $form,
             ],
         );
     }
@@ -84,7 +84,7 @@ class CategorieController extends AbstractController
             '@AcMarcheMeriteSportif/categorie/edit.html.twig',
             [
                 'categorie' => $categorie,
-                'form' => $form->createView(),
+                'form' => $form,
             ],
         );
     }

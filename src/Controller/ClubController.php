@@ -71,7 +71,7 @@ class ClubController extends AbstractController
             '@AcMarcheMeriteSportif/club/new.html.twig',
             [
                 'club' => $club,
-                'form' => $form->createView(),
+                'form' => $form,
             ],
         );
     }
@@ -117,7 +117,7 @@ class ClubController extends AbstractController
             '@AcMarcheMeriteSportif/club/edit.html.twig',
             [
                 'club' => $club,
-                'form' => $form->createView(),
+                'form' => $form,
             ],
         );
     }

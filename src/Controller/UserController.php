@@ -55,7 +55,7 @@ class UserController extends AbstractController
         return $this->render('@AcMarcheMeriteSportif/user/new.html.twig',
             [
                 'user' => $user,
-                'form' => $form->createView(),
+                'form' => $form,
             ]
         );
     }
@@ -87,7 +87,7 @@ class UserController extends AbstractController
         return $this->render('@AcMarcheMeriteSportif/user/edit.html.twig',
             [
                 'user' => $user,
-                'form' => $form->createView(),
+                'form' => $form,
             ]
         );
     }

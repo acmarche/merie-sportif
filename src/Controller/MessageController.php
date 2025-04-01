@@ -61,7 +61,7 @@ class MessageController extends AbstractController
         return $this->render(
             '@AcMarcheMeriteSportif/message/index.html.twig',
             [
-                'form' => $form->createView(),
+                'form' => $form,
             ],
         );
     }

@@ -131,7 +131,7 @@ class VoteController extends AbstractController
             [
                 'categorie' => $categorie,
                 'candidats' => $categorie->getCandidats(),
-                'form' => $form->createView(),
+                'form' => $form,
             ]
             , $response,
         );

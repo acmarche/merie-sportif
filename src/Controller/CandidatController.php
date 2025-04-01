@@ -37,7 +37,7 @@ class CandidatController extends AbstractController
             '@AcMarcheMeriteSportif/candidat/index.html.twig',
             [
                 'candidats' => $candidats,
-                'form' => $form->createView(),
+                'form' => $form,
             ]
             , $response,
         );
@@ -64,7 +64,7 @@ class CandidatController extends AbstractController
             '@AcMarcheMeriteSportif/candidat/new.html.twig',
             [
                 'candidat' => $candidat,
-                'form' => $form->createView(),
+                'form' => $form,
             ],
         );
     }
@@ -99,7 +99,7 @@ class CandidatController extends AbstractController
             '@AcMarcheMeriteSportif/candidat/edit.html.twig',
             [
                 'candidat' => $candidat,
-                'form' => $form->createView(),
+                'form' => $form,
             ]
             , $response,
         );

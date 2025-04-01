@@ -43,7 +43,7 @@ class PasswordController extends AbstractController
             '@AcMarcheMeriteSportif/user/edit_password.html.twig',
             [
                 'user' => $user,
-                'form' => $form->createView(),
+                'form' => $form,
             ],
         );
     }
