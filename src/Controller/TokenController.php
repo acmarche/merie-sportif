@@ -47,7 +47,7 @@ class TokenController extends AbstractController
         $user = $token->getUser();
         $this->tokenManager->loginUser($request, $user, 'main');
 
-        if ($setting->mode === SettingEnum::MODE_VOTE) {
+        if ($setting->mode === SettingEnum::MODE_VOTE->value) {
             return $this->redirectToRoute('vote_intro');
         }
 
