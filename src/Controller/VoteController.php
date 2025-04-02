@@ -39,7 +39,7 @@ class VoteController extends AbstractController
     public function index(): Response
     {
         $setting = $this->settingRepository->findOne();
-        if ($setting->mode === SettingEnum::MODE_PROPOSITION) {
+        if ($setting->mode === SettingEnum::MODE_PROPOSITION->value) {
             $this->addFlash('warning', 'Les votes ne sont pas encore ouvert');
 
             return $this->redirectToRoute('merite_home');
@@ -79,7 +79,7 @@ class VoteController extends AbstractController
     public function new(Request $request, Categorie $categorie): Response
     {
         $setting = $this->settingRepository->findOne();
-        if ($setting->mode === SettingEnum::MODE_PROPOSITION) {
+        if ($setting->mode === SettingEnum::MODE_PROPOSITION->value) {
             $this->addFlash('warning', 'Les votes ne sont pas encore ouvert');
 
             return $this->redirectToRoute('merite_home');

@@ -61,7 +61,7 @@ class PropositionController extends AbstractController
     public function new(Request $request, Categorie $categorie): Response
     {
         $setting = $this->settingRepository->findOne();
-        if ($setting->mode === SettingEnum::MODE_VOTE) {
+        if ($setting->mode === SettingEnum::MODE_VOTE->value) {
             $this->addFlash('warning', 'Les propositions sont clôturées');
 
             return $this->redirectToRoute('proposition_index');
@@ -142,7 +142,7 @@ class PropositionController extends AbstractController
     public function edit(Request $request, Candidat $candidat): Response
     {
         $setting = $this->settingRepository->findOne();
-        if ($setting->mode === SettingEnum::MODE_VOTE) {
+        if ($setting->mode === SettingEnum::MODE_VOTE->value) {
             $this->addFlash('warning', 'Les propositions sont clôturées');
 
             return $this->redirectToRoute('proposition_index');
