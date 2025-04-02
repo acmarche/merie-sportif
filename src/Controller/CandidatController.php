@@ -88,17 +88,17 @@ class CandidatController extends AbstractController
         $form = $this->createForm(CandidatType::class, $candidat);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-var_dump($form->isValid());
+        if ($form->isSubmitted()) {
+
             $this->candidatRepository->flush();
 
             $this->addFlash('success', 'Candidat modifié');
-
-            return $this->redirectToRoute('candidat_show', ['uuid' => $candidat->getUuid()]);
-        } else {
             foreach ($form->getErrors() as $error) {
                 var_dump($error->getMessage(), $error->count());
             }
+
+            return $this->redirectToRoute('candidat_show', ['uuid' => $candidat->getUuid()]);
+
         }
 
         return $this->render(
