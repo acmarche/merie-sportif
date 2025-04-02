@@ -87,7 +87,7 @@ class CandidatController extends AbstractController
     {
         $form = $this->createForm(CandidatType::class, $candidat);
         $form->handleRequest($request);
-var_dump($form->isValid());
+
         if ($form->isSubmitted() && $form->isValid()) {
 var_dump($form->isValid());
             $this->candidatRepository->flush();
