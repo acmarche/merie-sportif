@@ -96,7 +96,9 @@ class CandidatController extends AbstractController
 
             return $this->redirectToRoute('candidat_show', ['uuid' => $candidat->getUuid()]);
         } else {
-            var_dump($form->getErrors());
+            foreach ($form->getErrors() as $error) {
+                var_dump($error->getMessage(), $error->count());
+            }
         }
 
         return $this->render(
