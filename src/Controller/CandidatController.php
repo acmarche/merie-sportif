@@ -85,7 +85,9 @@ class CandidatController extends AbstractController
     {
         $form = $this->createForm(CandidatType::class, $candidat);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            var_dump($form->getErrors());
             $this->candidatRepository->flush();
 
             $this->addFlash('success', 'Candidat modifié');
@@ -93,15 +95,12 @@ class CandidatController extends AbstractController
             return $this->redirectToRoute('candidat_show', ['uuid' => $candidat->getUuid()]);
         }
 
-        $response = new Response(null, $form->isSubmitted() ? Response::HTTP_ACCEPTED : Response::HTTP_OK);
-
         return $this->render(
             '@AcMarcheMeriteSportif/candidat/edit.html.twig',
             [
                 'candidat' => $candidat,
                 'form' => $form,
             ]
-            , $response,
         );
     }
 
