@@ -17,7 +17,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_MERITE_ADMIN')]
 class CandidatController extends AbstractController
 {
-    public function __construct(private readonly CandidatRepository $candidatRepository) {}
+    public function __construct(private readonly CandidatRepository $candidatRepository)
+    {
+    }
 
     #[Route(path: '/', name: 'candidat_index', methods: ['GET', 'POST'])]
     public function index(Request $request): Response
@@ -87,12 +89,14 @@ class CandidatController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            var_dump($form->getErrors());
+
             $this->candidatRepository->flush();
 
             $this->addFlash('success', 'Candidat modifié');
 
             return $this->redirectToRoute('candidat_show', ['uuid' => $candidat->getUuid()]);
+        } else {
+            var_dump($form->getErrors());
         }
 
         return $this->render(
