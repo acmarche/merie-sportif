@@ -3,8 +3,13 @@
 {% block body %}
     <div class="card">
 
-        <h3 class="card-header">Envoie des mails</h3>
+        <h3 class="card-header">Envoie des mails aux clubs</h3>
         <div class="card-body">
+            <div class="alert alert-info">
+                Un lien est automatiquement intégré dans le message.<br/>
+                Ce lien pointe suivant le "mode" vers les propositions ou les votes.<br/>
+                Voir paramètres dans l'appli.
+            </div>
             {{ form_start(form) }}
             {{ form_errors(form) }}
             {{ form_widget(form) }}
