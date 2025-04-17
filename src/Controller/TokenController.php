@@ -39,9 +39,7 @@ class TokenController extends AbstractController
     {
         $setting = $this->settingRepository->findOne();
         if ($this->tokenManager->isExpired($token)) {
-            $this->addFlash('danger', "Cette url a expirée");
 
-            return $this->redirectToRoute('merite_home');
         }
 
         $user = $token->getUser();
