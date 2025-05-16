@@ -22,6 +22,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_MERITE_CLUB')]
 class PropositionController extends AbstractController
 {
+    use ModeClosedTrait;
+
     public function __construct(
         private readonly CategorieRepository $categorieRepository,
         private readonly CandidatRepository $candidatRepository,
@@ -67,6 +69,7 @@ class PropositionController extends AbstractController
             return $this->redirectToRoute('proposition_index');
         }
 
+        $this->itsClosed($setting);
         $user = $this->getUser();
         $club = $user->getClub();
         if ($this->candidatRepository->isAlreadyProposed($club, $categorie) instanceof Candidat) {
@@ -148,6 +151,7 @@ class PropositionController extends AbstractController
             return $this->redirectToRoute('proposition_index');
         }
 
+        $this->itsClosed($setting);
         $form = $this->createForm(PropositionType::class, $candidat);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

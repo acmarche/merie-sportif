@@ -15,10 +15,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/token')]
 class TokenController extends AbstractController
 {
+    use ModeClosedTrait;
+
     public function __construct(
         private readonly TokenManager $tokenManager,
         private readonly SettingRepository $settingRepository,
-    ) {}
+    ) {
+    }
 
     #[Route(path: '/', name: 'merite_token_create')]
     #[IsGranted('ROLE_MERITE_ADMIN')]
@@ -48,7 +51,12 @@ class TokenController extends AbstractController
         if ($setting->mode === SettingEnum::MODE_VOTE->value) {
             return $this->redirectToRoute('vote_intro');
         }
+        if ($setting->mode === SettingEnum::MODE_PROPOSITION->value) {
+            return $this->redirectToRoute('proposition_index');
+        }
 
-        return $this->redirectToRoute('proposition_index');
+        $this->itsClosed($setting);
+
+        return $this->redirectToRoute('merite_home');
     }
 }

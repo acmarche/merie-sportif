@@ -25,6 +25,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_MERITE_CLUB')]
 class VoteController extends AbstractController
 {
+    use ModeClosedTrait;
+
     public function __construct(
         private readonly CategorieRepository $categorieRepository,
         private readonly CandidatRepository $candidatRepository,
@@ -44,6 +46,8 @@ class VoteController extends AbstractController
 
             return $this->redirectToRoute('merite_home');
         }
+
+        $this->itsClosed($setting);
 
         $votes = $this->voteRepository->getAll();
 
@@ -85,6 +89,7 @@ class VoteController extends AbstractController
             return $this->redirectToRoute('merite_home');
         }
 
+        $this->itsClosed($setting);
         $user = $this->getUser();
         $club = $user->getClub();
         if ($this->voteService->voteExist($club, $categorie)) {
