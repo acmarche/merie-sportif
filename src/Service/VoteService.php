@@ -50,6 +50,7 @@ class VoteService
     public function isComplete(Club $club): bool
     {
         $points = 0;
+        $total = $this->categorieRepository->count() * 3 ;
         foreach ($this->categorieRepository->findAll() as $categorie) {
             $votes = $this->voteRepository->getByClubAndCategorie($club, $categorie);
             foreach ($votes as $vote) {
@@ -57,7 +58,7 @@ class VoteService
             }
         }
 
-        return $points === 9;
+        return $points === $total;
     }
 
     /**
